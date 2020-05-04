@@ -332,9 +332,10 @@ $posts = [
                                 </a>
                             </div>
                         </div>
-                </footer>
-            </article>
-        <?php endforeach; ?>
+                    </footer>
+                </article>
+            <?php endforeach; ?>
+        </div>
     </div>
 </section>
 
