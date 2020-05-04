@@ -247,7 +247,6 @@ $posts = [
                 <header class="post__header">
                     <h2><?=$value['title'] ?></h2>
                 </header>
-
                 <div class="post__main">
                     <!--содержимое для поста-цитаты-->
                     <?php if ($value['type'] === 'post-quote'): ?>
@@ -298,8 +297,8 @@ $posts = [
                         <!--здесь содержимое карточки-->
                         <p><?=$value['post_content'] ?></p>
                     <?php endif; ?>
-
-                    <footer class="post__footer">
+                </div>
+                <footer class="post__footer">
                         <div class="post__author">
                             <a class="post__author-link" href="#" title="Автор">
                                 <div class="post__avatar-wrapper">
@@ -333,8 +332,7 @@ $posts = [
                                 </a>
                             </div>
                         </div>
-                    </footer>
-                </div>
+                </footer>
             </article>
         <?php endforeach; ?>
     </div>
