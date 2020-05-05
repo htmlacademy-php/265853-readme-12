@@ -38,9 +38,43 @@ $posts = [
         'post_content' => 'www.htmlacademy.ru',
         'user_name' => 'Владик',
         'user_avatar' => 'userpic.jpg'
+    ],
+    [
+        'title' => 'Озеро Байкал',
+        'type'  => 'post-text',
+        'post_content' => 'Озеро Байкал – огромное древнее озеро в горах Сибири к северу от монгольской границы. Байкал считается самым глубоким озером в мире. Он окружен сетью пешеходных маршрутов, называемых Большой байкальской тропой. Деревня Листвянка, расположенная на западном берегу озера, – популярная отправная точка для летних экскурсий. Зимой здесь можно кататься на коньках и собачьих упряжках.',
+        'user_name' => 'Владик',
+        'user_avatar' => 'userpic.jpg'
     ]
-]
+];
+
+function crop_text($text, $number_char = 300){
+
+    //разобьем текст на отдельные слова
+    $split_text = explode(" ", $text);
+
+    $word_length = 0;
+    //считаем длину каждого слова
+    foreach($split_text as $word){
+        $word_length +=  mb_strlen($word, 'utf8');//использую mb_strlen т.к strlen выдает в 2 раза больше символов.
+        $short_text[] = $word;
+        if($word_length >= $number_char){
+            break;
+        }
+    };
+    //обратно в текст
+    $text = implode(" ", $short_text);
+
+    if($word_length >= $number_char){
+        $final_text = "<p>". $text. "..." . "</p>". '<a class="post-text__more-link" "href="#">Читать далее</a>';
+        print($final_text);
+    }
+    else{
+        print("<p>". $text . "</p>");
+    }
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -295,7 +329,7 @@ $posts = [
 
                     <?php else: ?>
                         <!--здесь содержимое карточки-->
-                        <p><?=$value['post_content'] ?></p>
+                        <p><?=crop_text($value['post_content']); ?></p>
                     <?php endif; ?>
                 </div>
                 <footer class="post__footer">
