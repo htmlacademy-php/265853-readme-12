@@ -38,9 +38,46 @@ $posts = [
         'post_content' => 'www.htmlacademy.ru',
         'user_name' => 'Владик',
         'user_avatar' => 'userpic.jpg'
+    ],
+    [
+        'title' => 'Озеро Байкал',
+        'type'  => 'post-text',
+        'post_content' => 'Озеро Байкал – огромное древнее озеро в горах Сибири к северу от монгольской границы. Байкал считается самым глубоким озером в мире. Он окружен сетью пешеходных маршрутов, называемых Большой байкальской тропой. Деревня Листвянка, расположенная на западном берегу озера, – популярная отправная точка для летних экскурсий. Зимой здесь можно кататься на коньках и собачьих упряжках.',
+        'user_name' => 'Владик',
+        'user_avatar' => 'userpic.jpg'
     ]
-]
+];
+
+function crop_text($text, $number_char = 300){
+
+    //разобьем текст на отдельные слова
+    $split_text = explode(" ", $text);
+
+    $word_length = 0;
+
+    $reduction = false;
+    $short_text[] = "";
+    //считаем длину каждого слова
+    foreach($split_text as $word){
+        $word_length +=  mb_strlen($word, 'utf8') + 1;//использую mb_strlen т.к strlen выдает в 2 раза больше символов.
+        if($word_length >= $number_char){
+            $reduction = true;
+            break;
+        }
+        $short_text[] = $word;
+    };
+    //обратно в текст
+    $text = implode(" ", $short_text);
+
+    if($reduction != false ){
+        return "<p>" . $text. "..." . "</p>" . '<a class="post-text__more-link" "href="#">Читать далее</a>';
+    }
+    else{
+        return "<p>". $text . "</p>";
+    }
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -242,23 +279,29 @@ $posts = [
         </div>
 
     <div class="popular__posts">
-        <?php foreach ($posts as $key => $value):?>
-            <article class="popular__post post <?=$value['type'] ?>">
+        <?php foreach ($posts as $key => $value):
+            $post_content = $value['post_content'];
+            $post_type = $value['type'];
+            $post_title = $value['title'];
+            $user_avatar = $value['user_avatar'];
+            $user_name =$value['user_name'];
+            ?>
+            <article class="popular__post post <?=$post_type?>">
                 <header class="post__header">
-                    <h2><?=$value['title'] ?></h2>
+                    <h2><?=$post_title?></h2>
                 </header>
                 <div class="post__main">
                     <!--содержимое для поста-цитаты-->
-                    <?php if ($value['type'] === 'post-quote'): ?>
+                    <?php if ($post_type === 'post-quote'): ?>
                         <blockquote>
                             <p>
-                                <?=$value['post_content'] ?>
+                                <?=$post_content?>
                             </p>
                             <cite>Неизвестный Автор</cite>
                         </blockquote>
 
                     <!--содержимое для поста-ссылки-->
-                    <?php elseif ($value['type'] === 'post-link'): ?>
+                    <?php elseif ($post_type === 'post-link'): ?>
                         <div class="post-link__wrapper">
                             <a class="post-link__external" href="http://" title="Перейти по ссылке">
                                 <div class="post-link__info-wrapper">
@@ -266,20 +309,20 @@ $posts = [
                                         <img src="https://www.google.com/s2/favicons?domain=vitadental.ru" alt="Иконка">
                                     </div>
                                     <div class="post-link__info">
-                                        <h3><?=$value['title'] ?></h3>
+                                        <h3><?=$post_title?></h3>
                                     </div>
                                 </div>
-                                <span><?=$value['post_content'] ?></span>
+                                <span><?=$post_content?></span>
                             </a>
                         </div>
 
                     <!--содержимое для поста-фото-->
-                    <?php elseif ($value['type'] === 'post-photo'): ?>
+                    <?php elseif ($post_type === 'post-photo'): ?>
                         <div class="post-photo__image-wrapper">
-                        <img src="img/<?=$value['post_content'] ?>" alt="Фото от пользователя" width="360" height="240">
+                        <img src="img/<?=$post_content?>" alt="Фото от пользователя" width="360" height="240">
                     </div>
 
-                    <!--содержимое для поста-видео-->     
+                    <!--содержимое для поста-видео-->
                      <!--<div class="post-video__block">
                         <div class="post-video__preview">
                             </?=embed_youtube_cover(/* вставьте ссылку на видео */); ?>
@@ -295,7 +338,7 @@ $posts = [
 
                     <?php else: ?>
                         <!--здесь содержимое карточки-->
-                        <p><?=$value['post_content'] ?></p>
+                        <p><?=crop_text($post_content)?></p>
                     <?php endif; ?>
                 </div>
                 <footer class="post__footer">
@@ -303,10 +346,10 @@ $posts = [
                             <a class="post__author-link" href="#" title="Автор">
                                 <div class="post__avatar-wrapper">
                                     <!--укажите путь к файлу аватара-->
-                                    <img class="post__author-avatar" src="img/<?=$value['user_avatar'] ?>" alt="Аватар пользователя">
+                                    <img class="post__author-avatar" src="img/<?=$user_avatar?>" alt="Аватар пользователя">
                                 </div>
                                 <div class="post__info">
-                                    <b class="post__author-name"><?=$value['user_name'] ?></b>
+                                    <b class="post__author-name"><?=$user_name?></b>
                                     <time class="post__time" datetime="">дата</time>
                                 </div>
                             </a>
