@@ -312,14 +312,14 @@ function crop_text($text, $number_char = 300){
                                         <h3><?=$post_title?></h3>
                                     </div>
                                 </div>
-                                <span><?=$post_content ?></span>
+                                <span><?=$post_content?></span>
                             </a>
                         </div>
 
                     <!--содержимое для поста-фото-->
                     <?php elseif ($post_type === 'post-photo'): ?>
                         <div class="post-photo__image-wrapper">
-                        <img src="img/<?=$post_content ?>" alt="Фото от пользователя" width="360" height="240">
+                        <img src="img/<?=$post_content?>" alt="Фото от пользователя" width="360" height="240">
                     </div>
 
                     <!--содержимое для поста-видео-->
@@ -338,7 +338,7 @@ function crop_text($text, $number_char = 300){
 
                     <?php else: ?>
                         <!--здесь содержимое карточки-->
-                        <p><?=crop_text($post_content);?></p>
+                        <p><?=crop_text($post_content)?></p>
                     <?php endif; ?>
                 </div>
                 <footer class="post__footer">
