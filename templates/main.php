@@ -1,5 +1,4 @@
-<section class="page__main page__main--popular">
-    <div class="container">
+ <div class="container">
         <h1 class="page__title page__title--popular">Популярное</h1>
     </div>
     <div class="popular container">
@@ -192,4 +191,3 @@
             <?php endforeach; ?>
         </div>
     </div>
-</section>
