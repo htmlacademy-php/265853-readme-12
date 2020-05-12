@@ -5,6 +5,8 @@ $is_auth = rand(0, 1);
 
 $user_name = 'Егор Толбаев'; // укажите здесь ваше имя
 
+date_default_timezone_set('Europe/Moscow');
+
 $posts = [
     [
         'title' => 'Цитата',
@@ -77,6 +79,50 @@ function crop_text($text, $number_char = 300)
     } else {
         return "<p>" . $text . "</p>";
     }
+}
+
+function GetDateRelativeFormat(string $date): string
+{
+    if (mb_strlen($date) == 0) {
+        return "Дата не указанна";
+    }
+
+    $markPost = strtotime($date); //преобразуем текстовую дату
+    if ($markPost == false) {
+        return "Дата не указанна";
+    }
+
+    $markNow = time();
+    $markDiff = $markNow - $markPost;
+
+    $timeInterval = [
+        'minute' => 60,
+        'hour' => 3600,
+        'day' => 86400,
+        'week' => 604800
+    ];
+
+    if ($markDiff / $timeInterval['minute'] < 60) {
+        $numDiff = ceil($markDiff / $timeInterval['minute']);
+        if ($markDiff == 0) {
+            $timeHasPassed = 'меньше минуты назад';
+        } else {
+            $timeHasPassed = "$numDiff " . get_noun_plural_form($numDiff, "минута", "минуты", "минут") . " назад";
+        }
+    } else if ($markDiff / $timeInterval['hour'] < 24) {
+        $numDiff = ceil($markDiff / $timeInterval['hour']);
+        $timeHasPassed = "$numDiff " . get_noun_plural_form($numDiff, "час", "часа", "часов") . " назад";
+    } elseif ($markDiff / $timeInterval['day'] < 7) {
+        $numDiff = ceil($markDiff / $timeInterval['day']);
+        $timeHasPassed = "$numDiff " . get_noun_plural_form($numDiff, "день", "дня", "дней") . " назад";
+    } elseif ($markDiff / ($timeInterval['day'] * 7) < 5) {
+        $numDiff = ceil($markDiff / ($timeInterval['day'] * 7));
+        $timeHasPassed = "$numDiff " . get_noun_plural_form($numDiff, "неделя", "недели", "недель") . " назад";
+    } else {
+        $numDiff = ceil($markDiff / ($timeInterval['week'] * 5));
+        $timeHasPassed = "$numDiff " . get_noun_plural_form($numDiff, "месяц", "месяца", "месяцев") . " назад";
+    }
+    return $timeHasPassed;
 }
 
 $page_content = include_template('main.php', ['posts' => $posts]);
