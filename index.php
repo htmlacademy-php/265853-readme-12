@@ -87,41 +87,36 @@ function GetDateRelativeFormat(string $date): string
         return "Дата не указанна";
     }
 
-    $markPost = strtotime($date); //преобразуем текстовую дату
-    if ($markPost == false) {
-        return "Дата не указанна";
-    }
+    $datePost = date_create("$date");
+    $dateNow = date_create("now");
+    $interval = date_diff($datePost, $dateNow);
 
-    $markNow = time();
-    $markDiff = $markNow - $markPost;
+    $minutes = $interval->format('%i');
+    $hours = $interval->format('%H');
+    $days = $interval->format('%d');
+    $months = $interval->format('%m');
+    $years = $interval->format('%Y');
 
-    $timeInterval = [
-        'minute' => 60,
-        'hour' => 3600,
-        'day' => 86400,
-        'week' => 604800
-    ];
-
-    if ($markDiff / $timeInterval['minute'] < 60) {
-        $numDiff = ceil($markDiff / $timeInterval['minute']);
-        if ($markDiff == 0) {
-            $timeHasPassed = 'меньше минуты назад';
-        } else {
-            $timeHasPassed = "$numDiff " . get_noun_plural_form($numDiff, "минута", "минуты", "минут") . " назад";
-        }
-    } else if ($markDiff / $timeInterval['hour'] < 24) {
-        $numDiff = ceil($markDiff / $timeInterval['hour']);
-        $timeHasPassed = "$numDiff " . get_noun_plural_form($numDiff, "час", "часа", "часов") . " назад";
-    } elseif ($markDiff / $timeInterval['day'] < 7) {
-        $numDiff = ceil($markDiff / $timeInterval['day']);
-        $timeHasPassed = "$numDiff " . get_noun_plural_form($numDiff, "день", "дня", "дней") . " назад";
-    } elseif ($markDiff / ($timeInterval['day'] * 7) < 5) {
-        $numDiff = ceil($markDiff / ($timeInterval['day'] * 7));
-        $timeHasPassed = "$numDiff " . get_noun_plural_form($numDiff, "неделя", "недели", "недель") . " назад";
+    if ($minutes != 0) {
+        $timeHasPassed = $minutes . ' ' . get_noun_plural_form($minutes, "минута", "минуты", "минут") . " назад";
+    } elseif ($hours != 0) {
+        $hours = floor($hours);
+        $timeHasPassed = $hours . ' ' . get_noun_plural_form($hours, "час", "часа", "часов") . " назад";
+    } elseif ($days != 0) {
+        $timeHasPassed = $days . ' ' . get_noun_plural_form($days, "день", "дня", "дней") . " назад";
+    } elseif ($days > 7 && $days < 35) {
+        $week = floor($days / 7);
+        $timeHasPassed = $week . ' ' . get_noun_plural_form($week, "неделя", "недели", "недель") . " назад";
+    } elseif ($months != 0) {
+        $months = floor($months);
+        $timeHasPassed = $months . ' ' . get_noun_plural_form($months, "месяц", "месяца", "месяцев") . " назад";
+    } elseif ($years != 0) {
+        $years = floor($years);
+        $timeHasPassed = $years . ' ' . get_noun_plural_form($months, 'год', 'года', 'лет') . ' назад';
     } else {
-        $numDiff = ceil($markDiff / ($timeInterval['week'] * 5));
-        $timeHasPassed = "$numDiff " . get_noun_plural_form($numDiff, "месяц", "месяца", "месяцев") . " назад";
+        $timeHasPassed = 'меньше минуты назад';
     }
+
     return $timeHasPassed;
 }
 
