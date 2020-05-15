@@ -97,22 +97,22 @@ function GetDateRelativeFormat(string $date): string
     $months = $interval->format('%m');
     $years = $interval->format('%Y');
 
-    if ($minutes != 0) {
-        $timeHasPassed = $minutes . ' ' . get_noun_plural_form($minutes, "минута", "минуты", "минут") . " назад";
-    } elseif ($hours != 0) {
-        $hours = floor($hours);
-        $timeHasPassed = $hours . ' ' . get_noun_plural_form($hours, "час", "часа", "часов") . " назад";
-    } elseif ($days != 0) {
-        $timeHasPassed = $days . ' ' . get_noun_plural_form($days, "день", "дня", "дней") . " назад";
-    } elseif ($days > 7 && $days < 35) {
-        $week = floor($days / 7);
-        $timeHasPassed = $week . ' ' . get_noun_plural_form($week, "неделя", "недели", "недель") . " назад";
+    if ($years != 0) {
+        $years = floor($years);
+        $timeHasPassed = $years . ' ' . get_noun_plural_form($months, 'год', 'года', 'лет') . ' назад';
     } elseif ($months != 0) {
         $months = floor($months);
         $timeHasPassed = $months . ' ' . get_noun_plural_form($months, "месяц", "месяца", "месяцев") . " назад";
-    } elseif ($years != 0) {
-        $years = floor($years);
-        $timeHasPassed = $years . ' ' . get_noun_plural_form($months, 'год', 'года', 'лет') . ' назад';
+    } elseif ($days > 7 && $days < 35) {
+        $week = floor($days / 7);
+        $timeHasPassed = $week . ' ' . get_noun_plural_form($week, "неделя", "недели", "недель") . " назад";
+    } elseif ($days != 0) {
+        $timeHasPassed = $days . ' ' . get_noun_plural_form($days, "день", "дня", "дней") . " назад";
+    } elseif ($hours != 0) {
+        $hours = floor($hours);
+        $timeHasPassed = $hours . ' ' . get_noun_plural_form($hours, "час", "часа", "часов") . " назад";
+    } elseif ($minutes != 0) {
+        $timeHasPassed = $minutes . ' ' . get_noun_plural_form($minutes, "минута", "минуты", "минут") . " назад";
     } else {
         $timeHasPassed = 'меньше минуты назад';
     }
