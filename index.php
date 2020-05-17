@@ -5,6 +5,8 @@ $is_auth = rand(0, 1);
 
 $user_name = 'Егор Толбаев'; // укажите здесь ваше имя
 
+date_default_timezone_set('Europe/Moscow');
+
 $posts = [
     [
         'title' => 'Цитата',
@@ -76,6 +78,49 @@ function crop_text($text, $number_char = 300)
         return "<p>" . $text . "..." . "</p>" . '<a class="post-text__more-link" "href="#">Читать далее</a>';
     } else {
         return "<p>" . $text . "</p>";
+    }
+}
+
+function GetDateRelativeFormat(DateTime $date): string
+{
+    $current_time = new DateTime('now');
+    $interval = $date->diff($current_time);
+
+    $minutes = $interval->format('%i');
+    $hours = $interval->format('%H');
+    $days = $interval->format('%d');
+    $months = $interval->format('%m');
+    $years = $interval->format('%Y');
+
+    if ($years != 0) {
+        $years = floor($years);
+        $timeHasPassed = $years . ' ' . get_noun_plural_form($months, 'год', 'года', 'лет') . ' назад';
+    } elseif ($months != 0) {
+        $months = floor($months);
+        $timeHasPassed = $months . ' ' . get_noun_plural_form($months, "месяц", "месяца", "месяцев") . " назад";
+    } elseif ($days > 7 && $days < 35) {
+        $week = floor($days / 7);
+        $timeHasPassed = $week . ' ' . get_noun_plural_form($week, "неделя", "недели", "недель") . " назад";
+    } elseif ($days != 0) {
+        $timeHasPassed = $days . ' ' . get_noun_plural_form($days, "день", "дня", "дней") . " назад";
+    } elseif ($hours != 0) {
+        $hours = floor($hours);
+        $timeHasPassed = $hours . ' ' . get_noun_plural_form($hours, "час", "часа", "часов") . " назад";
+    } elseif ($minutes != 0) {
+        $timeHasPassed = $minutes . ' ' . get_noun_plural_form($minutes, "минута", "минуты", "минут") . " назад";
+    } else {
+        $timeHasPassed = 'меньше минуты назад';
+    }
+
+    return $timeHasPassed;
+}
+
+function GetPostTime($index): DateTime
+{
+    $random_date = generate_random_date($index);
+    try {
+        return new DateTime($random_date);
+    } catch (Exception $e) {
     }
 }
 
