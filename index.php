@@ -81,15 +81,10 @@ function crop_text($text, $number_char = 300)
     }
 }
 
-function GetDateRelativeFormat(string $date): string
+function GetDateRelativeFormat(DateTime $date): string
 {
-    if (mb_strlen($date) == 0) {
-        return "Дата не указанна";
-    }
-
-    $datePost = date_create("$date");
-    $dateNow = date_create("now");
-    $interval = date_diff($datePost, $dateNow);
+    $current_time = new DateTime('now');
+    $interval = $date->diff($current_time);
 
     $minutes = $interval->format('%i');
     $hours = $interval->format('%H');
@@ -118,6 +113,15 @@ function GetDateRelativeFormat(string $date): string
     }
 
     return $timeHasPassed;
+}
+
+function GetPostTime($index): DateTime
+{
+    $random_date = generate_random_date($index);
+    try {
+        return new DateTime($random_date);
+    } catch (Exception $e) {
+    }
 }
 
 $page_content = include_template('main.php', ['posts' => $posts]);

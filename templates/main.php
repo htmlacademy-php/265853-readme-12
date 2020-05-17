@@ -160,12 +160,10 @@
                             <div class="post__info">
                                 <b class="post__author-name"><?= $user_name ?></b>
                                 <?php
-                                    $dateOrigin = generate_random_date($key);
-                                    $dateTitle = strftime('%d.%m.%Y %H:%M', strtotime($dateOrigin));
-                                    $dateView = GetDateRelativeFormat($dateOrigin);
+                                $post_date = GetPostTime($key);
                                 ?>
-                                <time class="post__time" title="<?= $dateTitle ?>"
-                                      datetime="<?= $dateOrigin ?>"><?= $dateView ?></time>
+                                <time class="post__time" title="<?= $post_date->format('d.m.Y H:i') ?>"
+                                      datetime="<?= $post_date->format('Y-m-d H:i:s') ?>"><?= GetDateRelativeFormat($post_date); ?></time>
                             </div>
                         </a>
                     </div>
