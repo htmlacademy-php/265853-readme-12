@@ -22,13 +22,13 @@ CREATE TABLE `content_type` (
 CREATE TABLE `posts` (
     `id`       INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
     `date_add` TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    `title`    VARCHAR(128),
-    `content_text` TEXT,
+    `title`    VARCHAR(128) NOT NULL,
+    `content_text` TEXT NOT NULL,
     `quote_author` VARCHAR(128),
     `img_url`      VARCHAR(128),
     `video_url`    VARCHAR(128),
     `link`         VARCHAR(256),
-    `number_views` INT,
+    `number_views` INT NOT NULL DEFAULT '0',
     `user_id` INT NOT NULL,
     `type_id` INT NOT NULL,
     FOREIGN KEY (`user_id`)  REFERENCES `users` (`Id`),
@@ -38,7 +38,7 @@ CREATE TABLE `posts` (
 CREATE TABLE `comments` (
     `id` INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
     `date_add` TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    `content` TEXT,
+    `content` TEXT NOT NULL,
     `user_id` INT NOT NULL,
     `post_id` INT NOT NULL,
     FOREIGN KEY (`user_id`)  REFERENCES `users` (`Id`),
@@ -64,7 +64,7 @@ CREATE TABLE `subscriptions` (
 CREATE TABLE `messages` (
     `id` INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
     `date_add` TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    `content` TEXT,
+    `content` TEXT NOT NULL,
     `message_sender` INT NOT NULL,
     `message_recipient` INT NOT NULL,
     FOREIGN KEY (`message_sender`)  REFERENCES `users` (`Id`),
@@ -84,7 +84,7 @@ CREATE TABLE `post_hashtag` (
     FOREIGN KEY (`hashtag_id`)  REFERENCES `hashtags` (`Id`)
 );
 
-CREATE INDEX `c_login`   ON `users`    (`login`);
-CREATE INDEX `c_email`   ON `users`    (`email`);
+CREATE INDEX `c_login_email` ON `users` (`login`,`email`);
+CREATE INDEX `c_post_user`   ON `likes` (`post_id`,`user_id`);
 CREATE INDEX `c_title`   ON `posts`    (`title`);
 CREATE INDEX `c_hashtag` ON `hashtags` (`title`);
