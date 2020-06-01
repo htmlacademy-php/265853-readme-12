@@ -23,7 +23,7 @@ CREATE TABLE `posts` (
     `id`       INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
     `date_add` TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     `title`    VARCHAR(128) NOT NULL,
-    `content_text` TEXT NOT NULL,
+    `content_text` TEXT,
     `quote_author` VARCHAR(128),
     `img_url`      VARCHAR(128),
     `video_url`    VARCHAR(128),
