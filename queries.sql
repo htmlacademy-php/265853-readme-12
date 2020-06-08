@@ -52,7 +52,8 @@ FROM 	`posts` AS P
 ORDER BY  P.`number_views` DESC
 
 #Можно еще так, но при большом количестве данных нужно посмотреть на производительность
-SELECT `ALL`.* FROM (
+SELECT `ALL`.`id`,`ALL`.`title`,`ALL`.`content_text`,`ALL`.`number_views`,`ALL`.`login`,`ALL`.`type_name`
+FROM (
 	SELECT  P.`id`, P.`title`,P.`content_text`, P.`number_views`, US.`login`, CT.`type_name`
 		FROM 	`posts` AS P
 			INNER JOIN  `users` AS US
@@ -98,7 +99,7 @@ FROM `posts` AS P
 WHERE US.`id` = 1
 
 #Можно еще так, но при большом количестве данных нужно посмотреть на производительность
-SELECT `id`, `content_text`, `login`
+SELECT `ALL`.`id`, `ALL`.`content_text`, `ALL`.`login`
 FROM (
 	SELECT P.`id`, P.`content_text`, US.`login`,US.`id` AS uID
 		FROM `posts` AS P
