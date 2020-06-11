@@ -12,10 +12,10 @@ VALUES ('Текст','text'),
 -- Добавление пользователей
 -- ------------------------------------------------------
 INSERT INTO `users` (`date_add`,`email`,`login`,`password`,`avatar`)
-VALUES ('2018-03-25 16:15:00', 'vlad@mail.ru', 'Владик', ' ', 'img/userpic-medium.jpg'),
-	    ('2019-02-05 18:35:03', 'mark@gmail.com', 'Марк', ' ', 'img/userpic-petro.jpg'),
-	    ('2020-05-020 00:34:15', 'larisa@gmail.com', 'Лариса', ' ', 'img/userpic-larisa-small.jpg'),
-	    ('2019-12-19 12:25:05',  'vicktor@gmail.com', 'Виктор', ' ', 'img/userpic-mark.jpg');
+VALUES ('2018-03-25 16:15:00', 'vlad@mail.ru', 'Владик', ' ', 'userpic.jpg'),
+	    ('2019-02-05 18:35:03', 'mark@gmail.com', 'Марк', ' ', 'userpic-petro.jpg'),
+	    ('2020-05-020 00:34:15', 'larisa@gmail.com', 'Лариса', ' ', 'userpic-larisa-small.jpg'),
+	    ('2019-12-19 12:25:05',  'vicktor@gmail.com', 'Виктор', ' ', 'userpic-mark.jpg');
 
 -- -----------------------------------------------------
 -- Создание списка постов
@@ -23,10 +23,10 @@ VALUES ('2018-03-25 16:15:00', 'vlad@mail.ru', 'Владик', ' ', 'img/userpic
 INSERT INTO `posts` (`date_add`, `title`,`content_text`,`quote_author`,`img_url`,`video_url`,`link`,`number_views`,`user_id`,`type_id`)
 VALUES ('2020-05-31 12:24:12', 'Цитата', 'Мы в жизни любим только раз, а после ищем лишь похожих', 'С.А.Есенин', NULL, NULL, NULL, 10, 3, 2),
        ('2020-05-30 23:43:12', 'Игра престолов',
-        'Не могу дождаться начала финального сезона своего любимого сериала! Не могу дождаться начала финального сезона своего любимого сериала! Не могу дождаться начала финального сезона своего любимого сериала! Не могу дождаться начала финального сезона своего любимого сериала!Не могу дождаться начала финального сезона своего любимого сериала!',
+        'Не могу дождаться начала финального сезона своего любимого сериала!',
         NULL, NULL, NULL, NULL, 1, 1, 1),
-       ('2020-05-25 12:43:12', 'Наконец, обработал фотки!', NULL, NULL, 'img/rock-medium.jpg', NULL, NULL, 2, 4, 4),
-       ('2020-05-17 12:43:12', 'Моя мечта', NULL, NULL, 'img/coast-medium.jpg', NULL, NULL, 3, 3, 3),
+       ('2020-05-25 12:43:12', 'Наконец, обработал фотки!', NULL, NULL, 'rock-medium.jpg', NULL, NULL, 2, 4, 3),
+       ('2020-05-17 12:43:12', 'Моя мечта', NULL, NULL, 'coast-medium.jpg', NULL, NULL, 3, 3, 3),
        ('2019-12-01 12:43:12', 'Лучшие курсы', NULL, NULL, NULL, NULL, 'www.htmlacademy.ru', 6, 1, 5),
        ('2020-03-02 12:43:12', 'Озеро Байкал', 'Озеро Байкал – огромное древнее озеро в горах Сибири к северу от монгольской границы. Байкал считается самым глубоким озером в мире. Он окружен сетью пешеходных маршрутов, называемых Большой байкальской тропой. Деревня Листвянка, расположенная на западном берегу озера, – популярная отправная точка для летних экскурсий. Зимой здесь можно кататься на коньках и собачьих упряжках.',
 		  NULL, NULL, NULL,NULL, 6, 1, 1);
@@ -52,8 +52,7 @@ FROM 	`posts` AS P
 ORDER BY  P.`number_views` DESC
 
 #Можно еще так, но при большом количестве данных нужно посмотреть на производительность
-SELECT `ALL`.`id`,`ALL`.`title`,`ALL`.`content_text`,`ALL`.`number_views`,`ALL`.`login`,`ALL`.`type_name`
-FROM (
+SELECT `ALL`.`id`,`ALL`.`title`,`ALL`.`content_text`,`ALL`.`number_views`,`ALL`.`login`,`ALL`.`type_name`  FROM (
 	SELECT  P.`id`, P.`title`,P.`content_text`, P.`number_views`, US.`login`, CT.`type_name`
 		FROM 	`posts` AS P
 			INNER JOIN  `users` AS US
@@ -155,3 +154,27 @@ VALUES
 
 INSERT  INTO `subscriptions` (`user_id`, `subscriber_id`)
 VALUES (4, 1);
+
+
+
+
+
+DELIMITER //
+CREATE PROCEDURE GetTypeContent ()
+BEGIN
+	SELECT `type_name`,`icon_type` FROM `content_type`;
+END; //
+
+
+DELIMITER //
+CREATE PROCEDURE GetPostUserType ()
+BEGIN
+	SELECT  P.`title`,
+IFNULL(P.`content_text`,IFNULL(P.`img_url`,IFNULL(P.`video_url`,P.`link`))) AS content_text , P.`number_views`, US.`login`,US.`avatar`, CT.`type_name`, CT.`icon_type`
+FROM 	`posts` AS P
+	INNER JOIN  `users` AS US
+		ON P.`user_id` = US.`id`
+	INNER JOIN  `content_type` AS CT
+		ON P.`type_id` = CT.`id`
+ORDER BY  P.`number_views` DESC;
+END; //

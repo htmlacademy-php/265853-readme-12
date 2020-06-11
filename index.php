@@ -1,5 +1,6 @@
 <?php
 require_once('helpers.php');
+require_once('connection.php');
 
 $is_auth = rand(0, 1);
 
@@ -7,50 +8,15 @@ $user_name = 'Егор Толбаев'; // укажите здесь ваше и
 
 date_default_timezone_set('Europe/Moscow');
 
-$posts = [
-    [
-        'title' => 'Цитата',
-        'type' => 'post-quote',
-        'post_content' => 'Мы в жизни любим только раз, а после ищем лишь похожих',
-        'user_name' => 'Лариса',
-        'user_avatar' => 'userpic-larisa-small.jpg'
-    ],
-    [
-        'title' => 'Игра престолов',
-        'type' => 'post-text',
-        'post_content' => 'Не могу дождаться начала финального сезона своего любимого сериала!',
-        'user_name' => 'Владик',
-        'user_avatar' => 'userpic.jpg'
-    ],
-    [
-        'title' => 'Наконец, обработал фотки!',
-        'type' => 'post-photo',
-        'post_content' => 'rock-medium.jpg',
-        'user_name' => 'Виктор',
-        'user_avatar' => 'userpic-mark.jpg'
-    ],
-    [
-        'title' => 'Моя мечта',
-        'type' => 'post-photo',
-        'post_content' => 'coast-medium.jpg',
-        'user_name' => 'Лариса',
-        'user_avatar' => 'userpic-larisa-small.jpg'
-    ],
-    [
-        'title' => 'Лучшие курсы',
-        'type' => 'post-link',
-        'post_content' => 'www.htmlacademy.ru',
-        'user_name' => 'Владик',
-        'user_avatar' => 'userpic.jpg'
-    ],
-    [
-        'title' => 'Озеро Байкал',
-        'type' => 'post-text',
-        'post_content' => 'Озеро Байкал – огромное древнее озеро в горах Сибири к северу от монгольской границы. Байкал считается самым глубоким озером в мире. Он окружен сетью пешеходных маршрутов, называемых Большой байкальской тропой. Деревня Листвянка, расположенная на западном берегу озера, – популярная отправная точка для летних экскурсий. Зимой здесь можно кататься на коньках и собачьих упряжках.',
-        'user_name' => 'Владик',
-        'user_avatar' => 'userpic.jpg'
-    ]
-];
+$connect =  dbConnect($host, $user, $password, $database);
+
+$sqlTypeContent = "CALL GetTypeContent";
+
+$types = StoredProcedureHandler($connect, $sqlTypeContent);
+
+$sqlPostUserType = "CALL GetPostUserType";
+
+$posts  = StoredProcedureHandler($connect, $sqlPostUserType);
 
 function crop_text($text, $number_char = 300)
 {
@@ -124,7 +90,65 @@ function GetPostTime($index): DateTime
     }
 }
 
-$page_content = include_template('main.php', ['posts' => $posts]);
+/**
+ * Устанавливает соединение с базой данных(БД) и возвращает объект соединения
+ *
+ * @param $host string Хост
+ * @param $user string Имя пользователя БД
+ * @param $password string Пароль пользователя БД
+ * @param $database string Имя БД
+ *
+ * @return mysqli $connect  Объект-соединение с БД
+ */
+function dbConnect(string $host, string $user, string $password, string $database): mysqli
+{
+    $connect = mysqli_connect($host, $user, $password, $database);
+
+    if (!$connect) {
+        exit("Ошибка подключения: " . mysqli_connect_error());
+    }
+    mysqli_set_charset($connect, "utf8");
+    return ($connect);
+}
+
+/**
+ * Обработка хранимых процедур
+ *
+ * @param mysqli string Строка соединения
+ * @param $storedProcedure string Хранимая процедура
+ *
+ * @return  array $result
+ */
+function StoredProcedureHandler(mysqli $connect, string $storedProcedure): array
+{
+    $final_result[] = null;
+    mysqli_multi_query($connect, $storedProcedure) or die (mysqli_error($connect));
+    while (mysqli_more_results($connect)) {
+        if ($result = mysqli_store_result($connect)) {
+            $final_result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        }
+        mysqli_next_result($connect);
+    }
+    return $final_result;
+}
+/**
+ * Обработка запросов
+ *
+ * @param mysqli string Строка соединения
+ * @param $stringSQL string Запрос
+ *
+ * @return  array $result
+ */
+function requestHandler(mysqli $connect, string $stringSQL): array
+{
+    $result = mysqli_query($connect, $stringSQL);
+    if (!$result) {
+        exit("Ошибка MySQL: " . mysqli_error($connect));
+    }
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
+$page_content = include_template('main.php', ['posts' => $posts,'types' => $types]);
 
 $layout_content = include_template('layout.php', [
     'content' => $page_content,
