@@ -41,14 +41,12 @@
                         <span>Все</span>
                     </a>
                 </li>
-                <!--Тут не уверен что сделал правильно, можно было сделать как ниже через if(), но подумал что блокт повторяються и
-                зачем это надо:)-->
                 <?php foreach ($types as $key => $value): ?>
                 <li class="popular__filters-item filters__item">
-                    <a class="filters__button filters__button--<?= ($value['icon_type']) ?> button" href="#">
-                        <span class="visually-hidden"><?= ($value['type_name']) ?></span>
+                    <a class="filters__button filters__button--<?= $value['icon_type'] ?> button" href="#">
+                        <span class="visually-hidden"><?= $value['type_name'] ?></span>
                         <svg class="filters__icon" width="22" height="18">
-                            <use xlink:href="#icon-filter-<?= ($value['icon_type']) ?>"></use>
+                            <use xlink:href="#icon-filter-<?= $value['icon_type'] ?>"></use>
                         </svg>
                     </a>
                 </li>
@@ -59,6 +57,9 @@
 
     <div class="popular__posts">
         <?php foreach ($posts as $key => $value):
+            $TimeHelper = new TimeHelper();
+            $StringHelper = new StringHelper();
+
             $post_content = htmlspecialchars($value['content_text']);
             $post_type = htmlspecialchars($value['icon_type']);
             $post_title = htmlspecialchars($value['title']);
@@ -101,24 +102,22 @@
                         <div class="post-photo__image-wrapper">
                             <img src="img/<?= $post_content ?>" alt="Фото от пользователя" width="360" height="240">
                         </div>
-
                         <!--содержимое для поста-видео-->
-                        <!--<div class="post-video__block">
+                    <?php elseif ($post_type === 'video'): ?>
+                        <div class="post-video__block">
                            <div class="post-video__preview">
-                               </?=embed_youtube_cover(/* вставьте ссылку на видео */); ?>
                                <img src="img/coast-medium.jpg" alt="Превью к видео" width="360" height="188">
                            </div>
-                           <a href="post-details.html" class="post-video__play-big button">
+                           <a href="<?= $post_content ?>" class="post-video__play-big button">
                                <svg class="post-video__play-big-icon" width="14" height="14">
                                    <use xlink:href="#icon-video-play-big"></use>
                                </svg>
                                <span class="visually-hidden">Запустить проигрыватель</span>
                            </a>
-                       </div> -->
-
+                       </div>
                     <?php else: ?>
                         <!--здесь содержимое карточки-->
-                        <p><?= crop_text($post_content) ?></p>
+                        <p><?= $StringHelper ->cropText($post_content) ?></p>
                     <?php endif; ?>
                 </div>
                 <footer class="post__footer">
@@ -132,10 +131,10 @@
                             <div class="post__info">
                                 <b class="post__author-name"><?= $user_name ?></b>
                                 <?php
-                                $post_date = GetPostTime($key);
+                                $post_date = $TimeHelper -> GetPostTime($key);
                                 ?>
                                 <time class="post__time" title="<?= $post_date->format('d.m.Y H:i') ?>"
-                                      datetime="<?= $post_date->format('Y-m-d H:i:s') ?>"><?= GetDateRelativeFormat($post_date); ?></time>
+                                      datetime="<?= $post_date->format('Y-m-d H:i:s') ?>"><?= $TimeHelper -> GetDateRelativeFormat($post_date); ?></time>
                             </div>
                         </a>
                     </div>
