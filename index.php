@@ -12,11 +12,11 @@ $user_name = 'Егор Толбаев'; // укажите здесь ваше и
 
 date_default_timezone_set('Europe/Moscow');
 
-$SqlServerHelper = new SqlServerHelper();
+$sqlServerHelper = new SqlServerHelper();
 
-$types = $SqlServerHelper->StoredProcedureHandler($connect, Procedures::sqlTypeContent);
+$types = $sqlServerHelper->StoredProcedureHandler($mainConnection, Procedures::sqlTypeContent);
 
-$posts = $SqlServerHelper->StoredProcedureHandler($connect, Procedures::sqlPostUserType);
+$posts = $sqlServerHelper->StoredProcedureHandler($mainConnection, Procedures::sqlPostUserType);
 
 $page_content = include_template('main.php', ['posts' => $posts, 'types' => $types]);
 

@@ -57,8 +57,8 @@
 
     <div class="popular__posts">
         <?php foreach ($posts as $key => $value):
-            $TimeHelper = new TimeHelper();
-            $StringHelper = new StringHelper();
+            $timeHelper = new TimeHelper();
+            $stringHelper = new StringHelper();
 
             $post_content = htmlspecialchars($value['content_text']);
             $post_type = htmlspecialchars($value['icon_type']);
@@ -117,7 +117,7 @@
                        </div>
                     <?php else: ?>
                         <!--здесь содержимое карточки-->
-                        <p><?= $StringHelper ->cropText($post_content) ?></p>
+                        <p><?= $stringHelper->cropText($post_content) ?></p>
                     <?php endif; ?>
                 </div>
                 <footer class="post__footer">
@@ -131,10 +131,10 @@
                             <div class="post__info">
                                 <b class="post__author-name"><?= $user_name ?></b>
                                 <?php
-                                $post_date = $TimeHelper -> GetPostTime($key);
+                                $post_date = $timeHelper->GetPostTime($key);
                                 ?>
                                 <time class="post__time" title="<?= $post_date->format('d.m.Y H:i') ?>"
-                                      datetime="<?= $post_date->format('Y-m-d H:i:s') ?>"><?= $TimeHelper -> GetDateRelativeFormat($post_date); ?></time>
+                                      datetime="<?= $post_date->format('Y-m-d H:i:s') ?>"><?= $timeHelper->GetDateRelativeFormat($post_date); ?></time>
                             </div>
                         </a>
                     </div>
