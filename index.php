@@ -189,13 +189,19 @@ $types = StoredProcedureHandler($mainConnection, $sqlTypeContent);
 
 $posts = StoredProcedureHandler($mainConnection, $sqlPostUserType);
 
-$page_content = include_template('main.php', ['posts' => $posts, 'types' => $types]);
+$page_content = include_template('main.php', [
+    'posts' => $posts,
+    'types' => $types]);
 
 $layout_content = include_template('layout.php', [
-    'content' => $page_content,
+    'page_content' => $page_content,
     'user_name' => $user_name,
     'is_auth' => $is_auth,
     'title' => 'readme: популярное'
 ]);
 
-print($layout_content);
+//TODO:Не уверен что это правельный вариант, но пока что не нашел другого решения
+if(!isset($_GET['post_id']))
+{
+    print($layout_content);
+}

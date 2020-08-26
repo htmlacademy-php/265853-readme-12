@@ -169,7 +169,7 @@ END; //
 DELIMITER //
 CREATE PROCEDURE GetPostUserType ()
 BEGIN
-	SELECT  P.`title`,
+	SELECT  P.`id`,P.`title`,
 IFNULL(P.`content_text`,IFNULL(P.`img_url`,IFNULL(P.`video_url`,P.`link`))) AS content_text , P.`number_views`, US.`login`,US.`avatar`, CT.`type_name`, CT.`icon_type`
 FROM 	`posts` AS P
 	INNER JOIN  `users` AS US

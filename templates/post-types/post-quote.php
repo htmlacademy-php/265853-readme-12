@@ -2,9 +2,9 @@
     <div class="post__main">
         <blockquote>
             <p>
-                <?= htmlspecialchars($post['content_text'],ENT_QUOTES); ?>
+                <?= htmlspecialchars($post['content_text'], ENT_QUOTES); ?>
             </p>
-            <cite><?= htmlspecialchars($post['quote_author'],ENT_QUOTES); ?></cite>
+            <cite><?= htmlspecialchars($post['quote_author'], ENT_QUOTES); ?></cite>
         </blockquote>
     </div>
 </div>
