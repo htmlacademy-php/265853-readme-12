@@ -33,7 +33,7 @@ function GetPostById(mysqli $connect, string $post_id)
 }
 
 /**
- * Количество постов пользователя по id
+ * Получаем количество постов пользователя по id
  * @param mysqli $connect
  * @param string $user_id идентификатор пользователя
  * @return array

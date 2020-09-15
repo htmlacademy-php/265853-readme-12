@@ -1,3 +1,16 @@
+<?php
+$sorting_number_views = (isset($sorting_parameters['number_views'])) ? $sorting_parameters['number_views'] : 'sorting__link--active';
+//$sorting_likes = (isset($sorting_parameters['likes'])) ? $sorting_parameters['likes'] : 'sorting__link--active';
+//$sorting_post_date = (isset($sorting_parameters['post_date'])) ? $sorting_parameters['post_date'] : 'sorting__link--active';
+
+$sorting_class = (isset($sorting_parameters['ASC'])) ? $sorting_parameters['ASC'] : 'sorting__link--reverse';
+//($sorting_parameters['sorting'] === 'ASC') ? 'sorting__link--reverse' : "";
+
+$url_number_views = setUrl($sorting_parameters['type'], 'number_views', ($sorting_parameters['sorting'] === 'DESC') ? "ASC" : "DESC");
+$url_likes = setUrl($sorting_parameters['type'], 'likes', ($sorting_parameters['sorting'] === 'DESC') ? "ASC" : "DESC");
+$url_post_date = setUrl($sorting_parameters['type'], 'post_date', ($sorting_parameters['sorting'] === 'DESC') ? "ASC" : "DESC");
+?>
+
 <section class="page__main page__main--popular">
     <div class="container">
         <h1 class="page__title page__title--popular">Популярное</h1>
@@ -8,7 +21,7 @@
                 <b class="popular__sorting-caption sorting__caption">Сортировка:</b>
                 <ul class="popular__sorting-list sorting__list">
                     <li class="sorting__item sorting__item--popular">
-                        <a class="sorting__link sorting__link--active" href="#">
+                        <a class="sorting__link <?= $sorting_number_views ?> <?= $sorting_class ?>" href="<?= $url_number_views ?>">
                             <span>Популярность</span>
                             <svg class="sorting__icon" width="10" height="12">
                                 <use xlink:href="#icon-sort"></use>
@@ -16,7 +29,9 @@
                         </a>
                     </li>
                     <li class="sorting__item">
-                        <a class="sorting__link" href="#">
+                        <a class="sorting__link <?= ($sorting_parameters['sort_value'] === 'likes') ? 'sorting__link--active' : ""; ?>
+                                                <?= $sorting_class ?>"
+                           href="<?= $url_likes ?>">
                             <span>Лайки</span>
                             <svg class="sorting__icon" width="10" height="12">
                                 <use xlink:href="#icon-sort"></use>
@@ -24,7 +39,9 @@
                         </a>
                     </li>
                     <li class="sorting__item">
-                        <a class="sorting__link" href="#">
+                        <a class="sorting__link <?= ($sorting_parameters['sort_value'] === 'post_date') ? 'sorting__link--active' : ""; ?>
+                                                <?= $sorting_class ?>"
+                           href="<?= $url_post_date ?>">
                             <span>Дата</span>
                             <svg class="sorting__icon" width="10" height="12">
                                 <use xlink:href="#icon-sort"></use>
@@ -37,14 +54,15 @@
                 <b class="popular__filters-caption filters__caption">Тип контента:</b>
                 <ul class="popular__filters-list filters__list">
                     <li class="popular__filters-item popular__filters-item--all filters__item filters__item--all">
-                        <a class="filters__button filters__button--ellipse filters__button--all filters__button--active"
-                           href="#">
+                        <a class="filters__button filters__button--ellipse filters__button--all <?= ($sorting_parameters['type'] === 'all') ? 'filters__button--active' : ""; ?>"
+                           href="<?= setUrl('all', $sorting_parameters['sort_value'], $sorting_parameters['sorting']) ?>">
                             <span>Все</span>
                         </a>
                     </li>
                     <?php foreach ($types as $key => $value): ?>
                         <li class="popular__filters-item filters__item">
-                            <a class="filters__button filters__button--<?= $value['icon_type'] ?> button" href="#">
+                            <a href="<?= setUrl($value['icon_type'], $sorting_parameters['sort_value'], $sorting_parameters['sorting']) ?>"
+                               class="filters__button filters__button--<?= $value['icon_type'] ?> button">
                                 <span class="visually-hidden"><?= $value['type_name'] ?></span>
                                 <svg class="filters__icon" width="22" height="18">
                                     <use xlink:href="#icon-filter-<?= $value['icon_type'] ?>"></use>
@@ -99,13 +117,13 @@
                             <!--содержимое для поста-фото-->
                         <?php elseif ($post_type === 'photo'): ?>
                             <div class="post-photo__image-wrapper">
-                                <img src="img/<?= $post_content ?>" alt="Фото от пользователя" width="360" height="240">
+                                <img src="../img/<?= $post_content ?>" alt="Фото от пользователя" width="360" height="240">
                             </div>
                             <!--содержимое для поста-видео-->
                         <?php elseif ($post_type === 'video'): ?>
                             <div class="post-video__block">
                                 <div class="post-video__preview">
-                                    <img src="img/coast-medium.jpg" alt="Превью к видео" width="360" height="188">
+                                    <img src="../img/coast-medium.jpg" alt="Превью к видео" width="360" height="188">
                                 </div>
                                 <a href="<?= $post_content ?>" class="post-video__play-big button">
                                     <svg class="post-video__play-big-icon" width="14" height="14">
@@ -124,13 +142,13 @@
                             <a class="post__author-link" href="#" title="Автор">
                                 <div class="post__avatar-wrapper">
                                     <!--укажите путь к файлу аватара-->
-                                    <img class="post__author-avatar" src="img/<?= $user_avatar ?>"
+                                    <img class="post__author-avatar" src="../img/<?= $user_avatar ?>"
                                          alt="Аватар пользователя">
                                 </div>
                                 <div class="post__info">
                                     <b class="post__author-name"><?= $user_name ?></b>
                                     <?php
-                                    $post_date = GetPostTime($key);
+                                        $post_date = GetPostTime($key);
                                     ?>
                                     <time class="post__time" title="<?= $post_date->format('d.m.Y H:i') ?>"
                                           datetime="<?= $post_date->format('Y-m-d H:i:s') ?>"><?= GetDateRelativeFormat($post_date); ?></time>
