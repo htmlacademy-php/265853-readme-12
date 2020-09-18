@@ -26,7 +26,7 @@ VALUES ('2020-05-31 12:24:12', 'Цитата', 'Мы в жизни любим т
         'Не могу дождаться начала финального сезона своего любимого сериала!',
         NULL, NULL, NULL, NULL, 1, 1, 1),
        ('2020-05-25 12:43:12', 'Наконец, обработал фотки!', NULL, NULL, 'rock-medium.jpg', NULL, NULL, 2, 4, 3),
-       ('2020-05-17 12:43:12', 'Моя мечта', NULL, NULL, 'coast-medium.jpg', NULL, NULL, 3, 3, 3),
+       ('2020-05-17 12:43:12', 'Моя мечта', NULL, NULL, 'coast-medium.jpg', 'https://www.youtube.com/watch?v=uCNWuSbPnt4', NULL, 3, 3, 4),
        ('2019-12-01 12:43:12', 'Лучшие курсы', NULL, NULL, NULL, NULL, 'www.htmlacademy.ru', 6, 1, 5),
        ('2020-03-02 12:43:12', 'Озеро Байкал', 'Озеро Байкал – огромное древнее озеро в горах Сибири к северу от монгольской границы. Байкал считается самым глубоким озером в мире. Он окружен сетью пешеходных маршрутов, называемых Большой байкальской тропой. Деревня Листвянка, расположенная на западном берегу озера, – популярная отправная точка для летних экскурсий. Зимой здесь можно кататься на коньках и собачьих упряжках.',
 		  NULL, NULL, NULL,NULL, 6, 1, 1);
@@ -170,7 +170,8 @@ DELIMITER //
 CREATE PROCEDURE GetPostUserType ()
 BEGIN
 	SELECT  P.`id`,P.`title`,
-IFNULL(P.`content_text`,IFNULL(P.`img_url`,IFNULL(P.`video_url`,P.`link`))) AS content_text , P.`number_views`, US.`login`,US.`avatar`, CT.`type_name`, CT.`icon_type`
+IFNULL(P.`content_text`,IFNULL(P.`img_url`,IFNULL(P.`video_url`,P.`link`))) AS content_text ,
+ P.`number_views`, US.`login`,US.`avatar`, CT.`type_name`, CT.`icon_type`,P.`video_url`
 FROM 	`posts` AS P
 	INNER JOIN  `users` AS US
 		ON P.`user_id` = US.`id`

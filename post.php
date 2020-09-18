@@ -45,17 +45,14 @@ function GetUserPostsCount(mysqli $connect, string $user_id)
     $result = requestHandler($connect, $sql);
     return empty($result) ? NULL : $result;
 }
+
 //endregion
 
 $post = GetPostById($mainConnection, $post_id)[0];
 
 if (!$post) {
-    //header("HTTP/1.0 404 Not Found");
-    //$error_msg = 'Страница не найдена.Ошибка 404: ' . mysqli_error($mainConnection);
-    //die($error_msg);
     $page_content = include_template('Error-404.php', []);
-}
-else {
+} else {
     $post_content = include_template("post-types/post-{$post['icon_type']}.php", ['post' => $post]);
     $posts_count = GetUserPostsCount($mainConnection, $post['user_id']);
     $page_content = include_template('post-show.php', [
@@ -64,11 +61,11 @@ else {
         'user_posts_count' => $posts_count[0]
     ]);
 }
-    $layout_content = include_template('layout.php', [
-        'page_content' => $page_content,
-        'is_auth' => $is_auth,
-        'user_name' => $user_name,
-        'title' => $page_title
-    ]);
+$layout_content = include_template('layout.php', [
+    'page_content' => $page_content,
+    'is_auth' => $is_auth,
+    'user_name' => $user_name,
+    'title' => $page_title
+]);
 
 print($layout_content);

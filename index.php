@@ -155,7 +155,7 @@ function GetPostTime(string $index): DateTime
  *
  * @return string вернет обработанные текст
  */
-function cropText(string $text, int $number_char = 300) : string
+function cropText(string $text, int $number_char = 300): string
 {
     //разобьем текст на отдельные слова
     $split_text = explode(" ", $text);
@@ -202,7 +202,8 @@ function popularPostsCategorySorting(mysqli $connect, string $type, string $sort
 		            IFNULL(P.`content_text`,IFNULL(P.`img_url`,IFNULL(P.`video_url`,P.`link`))) AS content_text , P.`number_views`,
                     P.`user_id`,
 	                P.`type_id`,
-		            CT.`icon_type`, U.`avatar`, U.`login`, IFNULL(L.`likes`, 0) AS likes, IFNULL(COM.`comments`, 0) AS comments_value
+		            CT.`icon_type`, U.`avatar`, U.`login`, IFNULL(L.`likes`, 0) AS likes, IFNULL(COM.`comments`, 0) AS comments_value,
+		            P.`video_url`
         FROM `posts` P
         INNER JOIN `users` U ON P.`user_id` = U.`id`
         INNER JOIN `content_type` CT ON P.`type_id` = CT.`id`
@@ -226,7 +227,7 @@ function popularPosts(mysqli $connect, string $sort_value = 'number_views', stri
 {
     $sql = "
     SELECT P.*, CT.`icon_type`, U.`avatar`, U.`login`, IFNULL(L.`likes`, 0) AS likes, IFNULL(COM.`comments`, 0) AS comments,
-    IFNULL(P.`content_text`,IFNULL(P.`img_url`,IFNULL(P.`video_url`,P.`link`))) AS content_text
+    IFNULL(P.`content_text`,IFNULL(P.`img_url`,IFNULL(P.`video_url`,P.`link`))) AS content_text,P.`video_url`
     FROM `posts` P
     INNER JOIN `users` U ON P.`user_id` = U.`id`
     INNER JOIN `content_type` CT ON P.`type_id` = CT.`id`
@@ -236,10 +237,11 @@ function popularPosts(mysqli $connect, string $sort_value = 'number_views', stri
     ";
     return requestHandler($connect, $sql);
 }
+
 //endregion
 
 /**
- * Получаем все посты с указанным типов  и сотрируем
+ * Получаем ссылку на посты/посты
  *
  * @param $type string Тип контента
  * @param $sort_value string Поле по которому сортируем
@@ -274,9 +276,8 @@ $posts = StoredProcedureHandler($mainConnection, $sqlPostUserType);
 
 if (isset($_GET['type'])) {
     if ($_GET['type'] === 'all') {
-        $posts = popularPosts($mainConnection,$sort_value, $sorting);
-    }
-    else {
+        $posts = popularPosts($mainConnection, $sort_value, $sorting);
+    } else {
         $posts = popularPostsCategorySorting($mainConnection, $sorting_parameters['type'], $sort_value, $sorting);
     }
 }
@@ -294,7 +295,6 @@ $layout_content = include_template('layout.php', [
 ]);
 
 //TODO:Не уверен что это правельный вариант, но пока что не нашел другого решения
-if(!isset($_GET['post_id']))
-{
+if (!isset($_GET['post_id'])) {
     print($layout_content);
 }
