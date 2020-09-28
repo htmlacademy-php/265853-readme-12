@@ -294,7 +294,4 @@ $layout_content = include_template('layout.php', [
     'title' => 'readme: популярное'
 ]);
 
-//TODO:Не уверен что это правельный вариант, но пока что не нашел другого решения
-if (!isset($_GET['post_id'])) {
-    print($layout_content);
-}
+print($layout_content);

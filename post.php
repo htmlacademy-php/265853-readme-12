@@ -1,9 +1,61 @@
 <?php
-require_once "index.php";
+require_once('helpers.php');
 
 $is_auth = rand(0, 1);
 $user_name = 'Егор Толбаев'; // укажите здесь ваше имя
 $page_title = 'Readme: Публикация';
+
+//region Подключение к базе данных
+/**Адрес сервера*/
+$host = 'localhost';
+/**Имя пользователя*/
+$user = 'root';
+/**Пароль*/
+$password = 'root';
+/**Имя базы данных*/
+$database = 'readme';
+
+/**
+ * Устанавливает соединение с базой данных(БД) и возвращает объект соединения
+ *
+ * @param $host string Хост
+ * @param $user string Имя пользователя БД
+ * @param $password string Пароль пользователя БД
+ * @param $database string Имя БД
+ *
+ * @return mysqli $connect  Объект-соединение с БД
+ */
+function dbConnect(string $host, string $user, string $password, string $database): mysqli
+{
+    $connect = mysqli_connect($host, $user, $password, $database);
+
+    if (!$connect) {
+        exit("Ошибка подключения: " . mysqli_connect_error());
+    }
+    mysqli_set_charset($connect, "utf8");
+    return ($connect);
+}
+
+/**Главное подключение к БД*/
+$mainConnection = dbConnect($host, $user, $password, $database);
+//endregion
+
+/**
+ * Обработка запросов
+ *
+ * @param mysqli string Строка соединения
+ * @param $stringSQL string Запрос
+ *
+ * @return  array $result
+ */
+function requestHandler(mysqli $connect, string $stringSQL): array
+{
+    $result = mysqli_query($connect, $stringSQL);
+    if (!$result) {
+        exit("Ошибка MySQL: " . mysqli_error($connect));
+    }
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
 
 $post_id = isset($_GET['post_id']) ? $_GET['post_id'] : null;
 
