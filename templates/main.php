@@ -76,6 +76,7 @@ $usl_all = setUrl('all', $sorting_parameters['sort_value'], $sorting_parameters[
         <div class="popular__posts">
             <?php foreach ($posts as $key => $value):
                 $timeHelper = new TimeHelper();
+                $stringHelper = new StringHelper();
 
                 $post_id = htmlspecialchars($value['id']);
                 $post_content = htmlspecialchars($value['content_text']);
@@ -137,7 +138,7 @@ $usl_all = setUrl('all', $sorting_parameters['sort_value'], $sorting_parameters[
                             </div>
                         <?php else: ?>
                             <!--здесь содержимое карточки-->
-                            <p><?= cropText($post_content) ?></p>
+                            <p><?= $stringHelper->cropText($post_content) ?></p>
                         <?php endif; ?>
                     </div>
                     <footer class="post__footer">
