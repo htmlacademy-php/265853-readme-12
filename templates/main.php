@@ -75,6 +75,8 @@ $usl_all = setUrl('all', $sorting_parameters['sort_value'], $sorting_parameters[
 
         <div class="popular__posts">
             <?php foreach ($posts as $key => $value):
+                $timeHelper = new TimeHelper();
+
                 $post_id = htmlspecialchars($value['id']);
                 $post_content = htmlspecialchars($value['content_text']);
                 $post_type = htmlspecialchars($value['icon_type']);
@@ -149,10 +151,10 @@ $usl_all = setUrl('all', $sorting_parameters['sort_value'], $sorting_parameters[
                                 <div class="post__info">
                                     <b class="post__author-name"><?= $user_name ?></b>
                                     <?php
-                                    $post_date = GetPostTime($key);
+                                    $post_date = $timeHelper->GetPostTime($key);
                                     ?>
                                     <time class="post__time" title="<?= $post_date->format('d.m.Y H:i') ?>"
-                                          datetime="<?= $post_date->format('Y-m-d H:i:s') ?>"><?= GetDateRelativeFormat($post_date); ?></time>
+                                          datetime="<?= $post_date->format('Y-m-d H:i:s') ?>"><?= $timeHelper->GetDateRelativeFormat($post_date); ?></time>
                                 </div>
                             </a>
                         </div>
