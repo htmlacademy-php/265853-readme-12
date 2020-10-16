@@ -1,28 +1,33 @@
 <?php
+/**Адрес сервера*/
+define('HOST', 'localhost');
+/**Имя пользователя*/
+define('USER', 'root');
+/**Пароль*/
+define('PASSWORD', 'root');
+/**Имя базы данных*/
+define('DATABASE', 'readme');
+
 class Connection
 {
-    /**Адрес сервера*/
-    public const HOST = 'localhost';
-    /**Имя пользователя*/
-    public const USER = 'root';
-    /**Пароль*/
-    public const PASSWORD = 'root';
-    /**Имя базы данных*/
-    public const DATABASE = 'readme';
+    private $host, $user, $password, $database;
+
+    function __construct($host, $user, $password, $database)
+    {
+        $this->host = $host;
+        $this->user = $user;
+        $this->password = $password;
+        $this->database = $database;
+        $this->dbConnect();
+    }
 
     /**
      * Устанавливает соединение с базой данных(БД) и возвращает объект соединения
-     *
-     * @param $host string Хост
-     * @param $user string Имя пользователя БД
-     * @param $password string Пароль пользователя БД
-     * @param $database string Имя БД
-     *
      * @return mysqli $connect  Объект-соединение с БД
      */
-    function dbConnect(string $host, string $user, string $password, string $database): mysqli
+    function dbConnect(): mysqli
     {
-        $connect = mysqli_connect($host, $user, $password, $database);
+        $connect = mysqli_connect($this->host, $this->user, $this->password, $this->database);
 
         if (!$connect) {
             exit("Ошибка подключения: " . mysqli_connect_error());
@@ -30,8 +35,13 @@ class Connection
         mysqli_set_charset($connect, "utf8");
         return ($connect);
     }
+
+    function dbClose(mysqli $connection)
+    {
+        mysqli_close($connection);
+    }
 }
 
-$connection = new Connection();
+$connection = new Connection(HOST, USER, PASSWORD, DATABASE);
 /**Главное подключение к БД*/
-$mainConnection = $connection->dbConnect($connection::HOST, $connection::USER, $connection::PASSWORD, $connection::DATABASE);
+$mainConnection = $connection->dbConnect();
