@@ -256,7 +256,8 @@
         </div>
     </div>
 </footer>
-<script src="libs/dropzone.js"></script>
+<!-- TODO: тут пока что не нашел ошибку, но если этот скрипт подключить то файл не грузиться -->
+<!--<script src="libs/dropzone.js"></script>-->
 <script src="js/dropzone-settings.js"></script>
 <script src="js/main.js"></script>
 </body>

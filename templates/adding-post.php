@@ -23,7 +23,7 @@
                 <div class="adding-post__tab-content">
                     <section class="adding-post__<?= $content_type['icon_type'] ?>">
                         <h2 class="visually-hidden">Форма добавления <?= $content_type['icon_type'] ?></h2>
-                        <form class="adding-post__form form" action="../add.php" method="post">
+                        <form class="adding-post__form form" action="../add.php" method="post" enctype="multipart/form-data">
                             <div class="form__text-inputs-wrapper">
                                 <div class="form__text-inputs">
                                     <div class="adding-post__input-wrapper form__input-wrapper">
