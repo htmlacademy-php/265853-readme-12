@@ -54,7 +54,7 @@ class Validation
         if (!file_exists($file_path)) {
             mkdir($file_path, 0777, true);
         }
-        if(!file_put_contents(($file_path . basename($url)), $content)){
+        if (!file_put_contents(($file_path . basename($url)), $content)) {
             return 'Файл небыл згружен';
         }
     }
@@ -78,8 +78,33 @@ class Validation
             mkdir($file_path, 0777, true);
         }
         $upload_file = $file_path . basename($files['userpic-file-photo']['name']);
-        if(!move_uploaded_file($files['userpic-file-photo']['tmp_name'], $upload_file)){
+        if (!move_uploaded_file($files['userpic-file-photo']['tmp_name'], $upload_file)) {
             return 'Файл небыл згружен.';
+        }
+    }
+
+    /**
+     * Функция для валидации тегов
+     * @param string $tags тег
+     *
+     * @return string Ошибка валидации
+     */
+    function checkTags(string $tags)
+    {
+        //Сделал такую валидацию, что бы можно было вводить буквы и цифры и знак хештега("#")
+        if (preg_match('/[^a-zа-я-Z0-9-# ]+/msiu', $tags)) {
+            return 'Теги должны состоять только из букв и цифр, допустим знак решётка(#).';
+        }
+
+        $tags_line = trim(htmlspecialchars($tags));
+        $tags = explode(" ", mb_strtolower($tags_line));
+        $tags_array = array_unique($tags, SORT_STRING);
+
+        //Не увидел жестких требований к валидации поэтому решил ограничить по размеру поля в БД
+        foreach ($tags_array as $tag) {
+            if (mb_strlen($tag) > 50) {
+                return "Тег: {$tag} слишком длинный. Подберите синоним или убедитесь что тег состоит из одного слова";
+            }
         }
     }
 }

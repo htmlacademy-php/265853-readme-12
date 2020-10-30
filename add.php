@@ -21,6 +21,8 @@ $errors = [];
 //TODO: не забыть проверить ссылку на ютубе при помощи check_youtube_url из helper.php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
+    $validation->checkTags($_POST['tags']);
+
     //есть ссылка
     if (isset($_POST['photo-url']) and !empty($_POST['photo-url'])) {
         $result = $validation->checkUrl($_POST['photo-url']);
