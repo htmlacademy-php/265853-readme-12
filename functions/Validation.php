@@ -107,4 +107,17 @@ class Validation
             }
         }
     }
+
+    /**
+     * Функция для валидации по длине
+     * @param string $text текст
+     * @param int $minLength минимальная длина
+     * @param int $maxLength максимальная длина
+     * @return string Ошибка валидации
+     */
+    function validateLength(string $text, int $minLength = 3, int $maxLength = 30){
+        if (mb_strlen($text) < $minLength || mb_strlen($text) > $maxLength) {
+            return "Значение поля должно быть не меньше $minLength и не больше $maxLength символов";
+        }
+    }
 }

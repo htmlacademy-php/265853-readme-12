@@ -21,6 +21,7 @@ $errors = [];
 //TODO: не забыть проверить ссылку на ютубе при помощи check_youtube_url из helper.php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
+    $validation->validateLength($_POST['heading']);
     $validation->checkTags($_POST['tags']);
 
     //есть ссылка
