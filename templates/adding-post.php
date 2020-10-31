@@ -7,7 +7,9 @@
             <div class="adding-post__tabs-wrapper tabs">
                 <div class="adding-post__tabs filters">
                     <ul class="adding-post__tabs-list filters__list tabs__list">
-                        <?php foreach ($content_types as $post_type => $content_type): ?>
+                        <?php foreach ($content_types
+
+                        as $post_type => $content_type): ?>
                         <li class="adding-post__tabs-item filters__item">
                             <a class="adding-post__tabs-link filters__button filters__button--<?= $content_type['icon_type']; ?> <?php if ($form_type == $content_type['icon_type']): ?> filters__button--active  tabs__item--active filters__button--active<?php endif; ?>"
                                href="../add.php?type=<?= $content_type['icon_type']; ?>">
@@ -23,7 +25,8 @@
                 <div class="adding-post__tab-content">
                     <section class="adding-post__<?= $content_type['icon_type'] ?>">
                         <h2 class="visually-hidden">Форма добавления <?= $content_type['icon_type'] ?></h2>
-                        <form class="adding-post__form form" action="../add.php" method="post" enctype="multipart/form-data">
+                        <form class="adding-post__form form" action="../add.php" method="post"
+                              enctype="multipart/form-data">
                             <div class="form__text-inputs-wrapper">
                                 <div class="form__text-inputs">
                                     <div class="adding-post__input-wrapper form__input-wrapper">
@@ -32,7 +35,8 @@
                                         <div
                                             class="form__input-section <?= (!empty($errors['heading'])) ? "form__input-section--error" : "" ?>">
                                             <input class="adding-post__input form__input" id="heading" type="text"
-                                                   name="heading" placeholder="Введите заголовок" value="">
+                                                   name="heading" placeholder="Введите заголовок"
+                                                   value="<?= !empty($_POST['heading']) ? $_POST['heading'] : "" ?>">
                                             <button class="form__error-button button" type="button">!<span
                                                     class="visually-hidden">Информация об ошибке</span></button>
                                             <div class="form__error-text">
@@ -44,18 +48,19 @@
                                     <?= $content ?>
                                     <?php
                                     if ((isset($_GET['type']) and $_GET['type'] != 'photo')
-                                            or (isset($_POST['type']) and $_POST['type'] != 'photo')): ?>
+                                        or (isset($_POST['type']) and $_POST['type'] != 'photo')): ?>
                                         <div class="adding-post__input-wrapper form__input-wrapper">
                                             <label class="adding-post__label form__label" for="tags">Теги</label>
                                             <div
                                                 class="form__input-section <?= (!empty($errors['tags'])) ? "form__input-section--error" : "" ?>">
                                                 <input class="adding-post__input form__input" id="tags" type="text"
-                                                       name="tags" placeholder="Введите теги" value="">
+                                                       name="tags" placeholder="Введите теги"
+                                                       value="<?= getPostValue('tags') ?>">
                                                 <button class="form__error-button button" type="button">!<span
                                                         class="visually-hidden">Информация об ошибке</span></button>
                                                 <div class="form__error-text">
                                                     <h3 class="form__error-title">Обнаружена ошибка</h3>
-                                                    <p class="form__error-desc"><?= (!empty($errors['tags']) ? $errors['tags'] : "") ?></p>
+                                                    <p class="form__error-desc"><?= (!empty($errors['tags']) ? $errors['tags'] : "f") ?></p>
                                                 </div>
                                             </div>
                                         </div>

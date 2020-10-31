@@ -15,16 +15,13 @@ class Validation
      * Функция проверяет ссылку на корректность
      * @param string $url ссылка
      *
-     * @return array Ошибка валидации
+     * @return string Ошибка валидации
      */
     function checkUrl(string $url)
     {
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            return array('status' => 'false',
-                'message' => 'Не вереный формат ссылки.');
+            return 'Не вереный формат ссылки.';
         }
-        return array('status' => 'true',
-            'message' => 'Ссылка верная');
     }
 
     /**
@@ -115,9 +112,62 @@ class Validation
      * @param int $maxLength максимальная длина
      * @return string Ошибка валидации
      */
-    function validateLength(string $text, int $minLength = 3, int $maxLength = 30){
+    function validateLength(string $text, int $minLength = 3, int $maxLength = 30)
+    {
         if (mb_strlen($text) < $minLength || mb_strlen($text) > $maxLength) {
             return "Значение поля должно быть не меньше $minLength и не больше $maxLength символов";
         }
+    }
+
+    //Хотел использовать check_youtube_url из helper.php но он всегда отдает false:(
+
+    /**
+     * Функция проверяет доступно ли видео по ссылке на youtube
+     * @param string $youtube_url Ссылка на youtube видео
+     *
+     * @return string Ошибку если валидация не прошла
+     */
+    function my_check_youtube_url($youtube_url)
+    {
+        $headers = get_headers('https://www.youtube.com/oembed?format=json&url=http://www.youtube.com/watch?v=' . extract_youtube_id($youtube_url));
+        if (!is_array($headers) or $headers[0] !== 'HTTP/1.0 200 OK') {
+            return "Видео по такой ссылке не найдено. Проверьте ссылку на видео";
+        }
+    }
+
+    /**
+     * Функция проверяет заполнены ли поля формы по указаным ключам
+     * @param array $required_fields
+     *
+     * @return array массив данных
+     */
+    function checkRequiredFields(array $required_fields): array
+    {
+        $errors = [];
+        foreach ($required_fields as $key => $field) {
+            if (empty($_POST[$field])) {
+                $errors[$field] = "Поле должно быть заполнено";
+            }
+        }
+        return $errors;
+    }
+
+    /**
+     * Функция проверяет ошибки по соответствующим ключам и записывает их в массив
+     * @param array $rules массив со значениями которые надо проверить
+     * @param array $errors массив с уже существующими ошибками
+     * @param array $array массив с данными для проверки
+     *
+     * @return array массив данных с ошибками
+     */
+    function checkRules(array $rules, array $errors, array $array): array
+    {
+        foreach ($array as $key => $value) {
+            if (empty($errors[$key]) && isset($rules[$key])) {
+                $rule = $rules[$key];
+                $errors[$key] = $rule;
+            }
+        }
+        return $errors;
     }
 }

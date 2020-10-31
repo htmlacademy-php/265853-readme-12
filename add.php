@@ -16,39 +16,115 @@ $sqlFunctions = new SqlFunctions();
 $sqlServerHelper = new SqlServerHelper();
 $validation = new Validation();
 
-//$errors = ['heading' => 'Заголовок. Это поле должно быть заполнено.'];
 $errors = [];
-//TODO: не забыть проверить ссылку на ютубе при помощи check_youtube_url из helper.php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    $validation->validateLength($_POST['heading']);
-    $validation->checkTags($_POST['tags']);
-
-    //есть ссылка
-    if (isset($_POST['photo-url']) and !empty($_POST['photo-url'])) {
-        $result = $validation->checkUrl($_POST['photo-url']);
-        if ($result['status'] === "true") {
-            $validation->getImgByLink($_POST['photo-url']);
-        } else {
-            $errors = ['photo-url' => $result['message']];
-        }
-    }
-
-    //если фаил есть
-    if (!empty($_FILES['userpic-file-photo']['name'])) {
-        //если он загружен без ошибок
-        if ($_FILES['userpic-file-photo']['error'] === UPLOAD_ERR_OK) {
-            $validation->uploadImgFile($_FILES);
-        } else {
-            //что бы знать по какой причине фаил не загружен
-            $error = new UploadException($_FILES['userpic-file-photo']['error']);
-        }
-    }
 
     $page_parameters['type'] = $_POST['type'];
     $posts = $_POST;
     $required_fields = ['heading'];
 
+    $rules = [
+        'heading' => $validation->validateLength($posts['heading']),
+        'tags' => $validation->checkTags($posts['tags'])
+    ];
+
+    switch ($posts['type']) {
+        case 'text':
+            $required_fields[] = 'post-text';
+            $rules = array_merge(
+                $rules,
+                [
+                    'post-text' => $validation->validateLength($posts['post-text'], 10, 600)
+                ]
+            );
+            break;
+        case 'quote':
+            $required_fields = array_merge($required_fields, ['quote-text', 'quote-author']);
+            $rules = array_merge(
+                $rules,
+                [
+                    'cite-text' => $validation->validateLength($posts['quote-text'], 10, 60)
+                ]
+            );
+            break;
+        case 'video':
+            $required_fields[] = 'video-url';
+            $rules = array_merge(
+                $rules,
+                [
+                    'video-url' => $validation->checkUrl($posts['video-url'])
+
+                ]
+            );
+            break;
+        case 'link':
+            $required_fields[] = 'post-link';
+            $rules = array_merge(
+                $rules,
+                [
+                    'post-link' => $validation->checkUrl($posts['post-link'])
+
+                ]
+            );
+            break;
+        case 'photo':
+            if (empty($_FILES['userpic-file-photo']['name'])) {
+                $required_fields[] = 'photo-url';
+                $rules = array_merge(
+                    $rules,
+                    [
+                        'photo-url' => $validation->checkUrl($posts['photo-url'])
+
+                    ]
+                );
+            }
+            break;
+    }
+
+    if ($posts['type'] === 'video') {
+        /*
+         if(!check_youtube_url($posts['video-url'])) {
+           $errors['video-url'] = "Неверная ссылка, убедитесь что ссылка ведет на youtube";
+        }
+        */
+        $rules = array_merge(
+            $rules,
+            [
+                'video-url' => (/*isset($posts['video-url']) and $posts['video-url'] !== "" and*/ $rules['video-url'] == null) ? $validation->my_check_youtube_url($posts['video-url']) : $rules['video-url']
+
+            ]
+        );
+    }
+
+    if ($posts['type'] === 'photo') {
+        if (!empty($_FILES['userpic-file-photo']['name'])) {
+            //если он загружен без ошибок
+            if ($_FILES['userpic-file-photo']['error'] === UPLOAD_ERR_OK) {
+                $validation->uploadImgFile($_FILES);
+            } else {
+                //что бы знать по какой причине фаил не загружен
+                $error = new UploadException($_FILES['userpic-file-photo']['error']);
+            }
+        } else if (isset($posts['photo-url'])) {
+            if (empty($errors['photo-url'])) {
+                $validation->getImgByLink($_POST['photo-url']);
+            }
+        }
+    }
+
+    $errors = $validation->checkRequiredFields($required_fields);
+    $errors = $validation->checkRules($rules, $errors, $posts);
+
+}
+/**
+ * Функция отдает значение если оно есть в  POST запросе
+ * @param string $name название поля по которому нужно значение
+ *
+ * @return string значение из POST запроса
+ */
+function getPostValue(string $name)
+{
+    return $_POST[$name] ?? "";
 }
 
 function getTypeFromRequest(array $get, array $post = []): ?string
