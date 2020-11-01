@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $rules = array_merge(
                 $rules,
                 [
-                    'cite-text' => $validation->validateLength($posts['quote-text'], 10, 60)
+                    'quote-text' => $validation->validateLength($posts['quote-text'], 10, 60)
                 ]
             );
             break;
@@ -115,6 +115,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors = $validation->checkRequiredFields($required_fields);
     $errors = $validation->checkRules($rules, $errors, $posts);
 
+    if (empty($errors)) {
+        $user_id = rand(1, 4);
+        $db_post['title'] = $_POST['heading'];
+        $type_id = $sqlFunctions->GetTypePostId($mainConnection, $posts['type']);
+        switch ($posts['type']) {
+            case 'text':
+                $column = 'content_text';
+                $db_post['content_text'] = $posts['post-text'];
+                break;
+            case 'quote':
+                $column = 'content_text, quote_author';
+                $db_post['content_text'] = $posts['quote-text'];
+                $db_post['quote_author'] = $posts['quote-author'];
+                break;
+            case 'photo':
+                $column = 'img_url';
+                $db_post['img_url'] = (!empty(basename($_FILES['userpic-file-photo']['name']))) ? '../uploads/' . basename($_FILES['userpic-file-photo']['name']) : '../uploads/' . basename($posts['photo-url']);
+                break;
+            case 'video':
+                $column = 'video_url';
+                $db_post['video_url'] = $posts['video-url'];
+                break;
+            case 'link':
+                $column = 'link';
+                $db_post['link'] = $posts['post-link'];
+                break;
+            default:
+                throw new \Exception('Unexpected value');
+        }
+
+
+        $sql = "INSERT INTO posts (title, $column, user_id, type_id) VALUES (?, ?, $user_id, $type_id)";
+        if ($posts['type'] === 'quote') {
+            $sql = "INSERT INTO posts (title, $column, user_id, type_id) VALUES (?, ?, ?, $user_id, $type_id)";
+        }
+
+        $tags = $validation->checkTags($posts['tags'], true);
+
+        $stmt = db_get_prepare_stmt($mainConnection, $sql, $db_post);
+
+        $post_id = $sqlServerHelper->addPostToDB($mainConnection, $stmt);
+
+        $result = $sqlServerHelper->addTagsToPosts($mainConnection, $tags, $post_id);
+        if ($result) {
+            header("Location: post.php?post_id=" . $post_id);
+        }
+    }
 }
 /**
  * Функция отдает значение если оно есть в  POST запросе

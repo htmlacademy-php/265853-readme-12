@@ -86,7 +86,7 @@ class Validation
      *
      * @return string Ошибка валидации
      */
-    function checkTags(string $tags)
+    function checkTags(string $tags, bool $response = false)
     {
         //Сделал такую валидацию, что бы можно было вводить буквы и цифры и знак хештега("#")
         if (preg_match('/[^a-zа-я-Z0-9-# ]+/msiu', $tags)) {
@@ -102,6 +102,9 @@ class Validation
             if (mb_strlen($tag) > 50) {
                 return "Тег: {$tag} слишком длинный. Подберите синоним или убедитесь что тег состоит из одного слова";
             }
+        }
+        if ($response == true) {
+            return array_unique($tags, SORT_STRING);
         }
     }
 

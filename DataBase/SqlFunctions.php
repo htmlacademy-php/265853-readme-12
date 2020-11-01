@@ -97,4 +97,20 @@ class SqlFunctions
         $result = $this->sqlServerHelper->requestHandler($connect, $sql);
         return empty($result) ? NULL : $result;
     }
+
+    /**
+     * Функция для получения id типа
+     * @param mysqli $connect Строка соединения
+     * @param string $post_name тип поста
+     *
+     * @return
+     */
+    function GetTypePostId(mysqli $connect, string $post_name)
+    {
+        $post_name = "'" . $post_name . "'";
+        $sql = "SELECT id FROM content_type WHERE icon_type = $post_name";
+        $result = $this->sqlServerHelper->requestHandler($connect, $sql);
+        $result = reset($result[0]);
+        return empty($result) ? null : $result;
+    }
 }
