@@ -12,13 +12,13 @@ $is_auth = rand(0, 1);
 $user_name = 'Егор Толбаев'; // укажите здесь ваше имя
 $page_title = 'Readme: Публикация';
 
-$procedures = new Procedures();
-$sqlFunctions = new SqlFunctions();
 $sqlServerHelper = new SqlServerHelper();
-$validation = new Validation();
 
 $errors = [];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    $sqlFunctions = new SqlFunctions();
+    $validation = new Validation();
 
     $page_parameters['type'] = $_POST['type'];
     $posts = $_POST;
@@ -83,11 +83,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($posts['type'] === 'video') {
-        /*
-         if(!check_youtube_url($posts['video-url'])) {
-           $errors['video-url'] = "Неверная ссылка, убедитесь что ссылка ведет на youtube";
-        }
-        */
         $rules = array_merge(
             $rules,
             [
@@ -177,6 +172,13 @@ function getPostValue(string $name)
     return $_POST[$name] ?? "";
 }
 
+/**
+ * Функция если тип формы из запроса
+ * @param array $get GET запрос
+ * @param array $post POST запрос
+ *
+ * @return string тип формы
+ */
 function getTypeFromRequest(array $get, array $post = []): ?string
 {
     if (isset($get['type'])) {

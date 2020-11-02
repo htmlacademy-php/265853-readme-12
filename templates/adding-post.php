@@ -1,3 +1,14 @@
+<?php
+$validation_heading = (!empty($errors['heading'])) ? "form__input-section--error" : "";
+$error_heading = !empty($errors['heading']) ? $errors['heading'] : "";
+
+$validation_tags = (!empty($errors['tags'])) ? "form__input-section--error" : "";
+$error_tags = !empty($errors['tags']) ? $errors['tags'] : "";
+
+$validation_list_errors = (empty($errors)) ? 'visually-hidden' : "";
+
+$isPhoto = (isset($_GET['type']) and $_GET['type'] != 'photo') or (isset($_POST['type']) and $_POST['type'] != 'photo');
+?>
 <main class="page__main page__main--adding-post">
     <div class="page__main-section">
         <div class="container">
@@ -33,26 +44,25 @@
                                         <label class="adding-post__label form__label" for="heading">Заголовок <span
                                                 class="form__input-required">*</span></label>
                                         <div
-                                            class="form__input-section <?= (!empty($errors['heading'])) ? "form__input-section--error" : "" ?>">
+                                            class="form__input-section <?= $validation_heading ?>">
                                             <input class="adding-post__input form__input" id="heading" type="text"
                                                    name="heading" placeholder="Введите заголовок"
-                                                   value="<?= !empty($_POST['heading']) ? $_POST['heading'] : "" ?>">
+                                                   value="<?= getPostValue('heading') ?>">
                                             <button class="form__error-button button" type="button">!<span
                                                     class="visually-hidden">Информация об ошибке</span></button>
                                             <div class="form__error-text">
                                                 <h3 class="form__error-title">Обнаружена ошибка</h3>
-                                                <p class="form__error-desc"><?= (!empty($errors['heading']) ? $errors['heading'] : "") ?></p>
+                                                <p class="form__error-desc"><?= $error_heading ?></p>
                                             </div>
                                         </div>
                                     </div>
                                     <?= $content ?>
                                     <?php
-                                    if ((isset($_GET['type']) and $_GET['type'] != 'photo')
-                                        or (isset($_POST['type']) and $_POST['type'] != 'photo')): ?>
+                                    if ($isPhoto): ?>
                                         <div class="adding-post__input-wrapper form__input-wrapper">
                                             <label class="adding-post__label form__label" for="tags">Теги</label>
                                             <div
-                                                class="form__input-section <?= (!empty($errors['tags'])) ? "form__input-section--error" : "" ?>">
+                                                class="form__input-section <?= $validation_tags ?>">
                                                 <input class="adding-post__input form__input" id="tags" type="text"
                                                        name="tags" placeholder="Введите теги"
                                                        value="<?= getPostValue('tags') ?>">
@@ -60,7 +70,7 @@
                                                         class="visually-hidden">Информация об ошибке</span></button>
                                                 <div class="form__error-text">
                                                     <h3 class="form__error-title">Обнаружена ошибка</h3>
-                                                    <p class="form__error-desc"><?= (!empty($errors['tags']) ? $errors['tags'] : "f") ?></p>
+                                                    <p class="form__error-desc"><?= $error_tags ?></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -72,7 +82,7 @@
                                         <a class="adding-post__close" href="#">Закрыть</a>
                                     </div>
                                 </div>
-                                <div class="form__invalid-block <?= (empty($errors)) ? 'visually-hidden' : "" ?>">
+                                <div class="form__invalid-block <?= $validation_list_errors ?>">
                                     <b class="form__invalid-slogan">Пожалуйста, исправьте следующие ошибки:</b>
                                     <ul class="form__invalid-list">
                                         <?php foreach ($errors as $key => $error) : ?>

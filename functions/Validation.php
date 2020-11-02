@@ -60,7 +60,6 @@ class Validation
     }
 
     //Хотел использовать check_youtube_url из helper.php но он всегда отдает false:(
-
     /**
      * Функция проверяет доступно ли видео по ссылке на youtube
      * @param string $youtube_url Ссылка на youtube видео

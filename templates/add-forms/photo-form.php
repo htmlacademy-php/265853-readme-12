@@ -1,3 +1,10 @@
+<?php
+$validation_photo_url = (!empty($errors['photo-url'])) ? "form__input-section--error" : "";
+$error_photo_url = !empty($errors['photo-url']) ? $errors['photo-url'] : "";
+
+$validation_tags = (!empty($errors['tags'])) ? "form__input-section--error" : "";
+$error_tags = !empty($errors['tags']) ? $errors['tags'] : "";
+?>
 <h2 class="visually-hidden">Форма добавления фото</h2>
 <form class="adding-post__form form" action="../../add.php" method="post" enctype="multipart/form-data">
     <input type="hidden" id="type" name="type" value="photo">
@@ -6,27 +13,27 @@
             <div class="adding-post__input-wrapper form__input-wrapper">
                 <label class="adding-post__label form__label" for="photo-url">Ссылка из интернета</label>
                 <div
-                    class="form__input-section <?= (!empty($errors['photo-url'])) ? "form__input-section--error" : "" ?>">
+                    class="form__input-section <?= $validation_photo_url ?>">
                     <input class="adding-post__input form__input" id="photo-url" type="text" name="photo-url"
                            placeholder="Введите ссылку" value="<?= getPostValue('photo-url') ?>">
                     <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span>
                     </button>
                     <div class="form__error-text">
-                        <h3 class="form__error-title">Заголовок сообщения</h3>
-                        <p class="form__error-desc"><?= (!empty($errors['photo-url']) ? $errors['photo-url'] : "") ?></p>
+                        <h3 class="form__error-title">Обнаружена ошибка</h3>
+                        <p class="form__error-desc"><?= $error_photo_url ?></p>
                     </div>
                 </div>
             </div>
             <div class="adding-post__input-wrapper form__input-wrapper">
                 <label class="adding-post__label form__label" for="tags">Теги</label>
-                <div class="form__input-section <?= (!empty($errors['tags'])) ? "form__input-section--error" : "" ?>">
+                <div class="form__input-section <?= $validation_tags ?>">
                     <input class="adding-post__input form__input" id="tags" type="text" name="tags"
                            placeholder="Введите теги" value="<?= getPostValue('tags') ?>">
                     <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span>
                     </button>
                     <div class="form__error-text">
-                        <h3 class="form__error-title">Заголовок сообщения</h3>
-                        <p class="form__error-desc"><?= (!empty($errors['tags']) ? $errors['tags'] : "") ?></p>
+                        <h3 class="form__error-title">Обнаружена ошибка</h3>
+                        <p class="form__error-desc"><?= $error_tags ?></p>
                     </div>
                 </div>
             </div>
