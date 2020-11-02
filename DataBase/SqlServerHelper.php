@@ -60,8 +60,8 @@ class SqlServerHelper
     /**
      * Добавления тегов в БД
      *
-     * @param mysqli $connect Строка соединения
-     * @param array $tags массив с тегами
+     * @param mysqli string Строка соединения
+     * @param array|string $tags массив с тегами
      * @param int $post_id id добавленного поста
      * @return mysqli_result Ответ
      */

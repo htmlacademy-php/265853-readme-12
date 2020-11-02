@@ -6,6 +6,7 @@ require_once('DataBase\SqlFunctions.php');
 require_once('DataBase\SqlServerHelper.php');
 require_once('functions\Validation.php');
 require_once('functions\UploadException.php');
+require_once('functions\Upload.php');
 
 $is_auth = rand(0, 1);
 $user_name = 'Егор Толбаев'; // укажите здесь ваше имя
@@ -98,16 +99,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($posts['type'] === 'photo') {
         if (!empty($_FILES['userpic-file-photo']['name'])) {
+            $upload = new Upload();
             //если он загружен без ошибок
             if ($_FILES['userpic-file-photo']['error'] === UPLOAD_ERR_OK) {
-                $validation->uploadImgFile($_FILES);
+                $upload->uploadImgFile();
             } else {
                 //что бы знать по какой причине фаил не загружен
                 $error = new UploadException($_FILES['userpic-file-photo']['error']);
             }
         } else if (isset($posts['photo-url'])) {
             if (empty($errors['photo-url'])) {
-                $validation->getImgByLink($_POST['photo-url']);
+                $upload = new Upload();
+                $upload->getImgByLink();
             }
         }
     }
