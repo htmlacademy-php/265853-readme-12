@@ -13,6 +13,7 @@ $user_name = 'Егор Толбаев'; // укажите здесь ваше и
 $page_title = 'Readme: Публикация';
 
 $sqlServerHelper = new SqlServerHelper();
+$connection = new Connection();
 
 $errors = [];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -116,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($errors)) {
         $user_id = rand(1, 4);
         $db_post['title'] = $_POST['heading'];
-        $type_id = $sqlFunctions->GetTypePostId($mainConnection, $posts['type']);
+        $type_id = $sqlFunctions->GetTypePostId($connection->mainConnection, $posts['type']);
         switch ($posts['type']) {
             case 'text':
                 $column = 'content_text';
@@ -140,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $db_post['link'] = $posts['post-link'];
                 break;
             default:
-                throw new \Exception('Unexpected value');
+                throw new Exception('Unexpected value');
         }
 
 
@@ -151,11 +152,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $tags = $validation->checkTags($posts['tags'], true);
 
-        $stmt = db_get_prepare_stmt($mainConnection, $sql, $db_post);
+        $stmt = db_get_prepare_stmt($connection->mainConnection, $sql, $db_post);
 
-        $post_id = $sqlServerHelper->addPostToDB($mainConnection, $stmt);
+        $post_id = $sqlServerHelper->addPostToDB($connection->mainConnection, $stmt);
 
-        $result = $sqlServerHelper->addTagsToPosts($mainConnection, $tags, $post_id);
+        $result = $sqlServerHelper->addTagsToPosts($connection->mainConnection, $tags, $post_id);
         if ($result) {
             header("Location: post.php?post_id=" . $post_id);
         }
@@ -189,7 +190,7 @@ function getTypeFromRequest(array $get, array $post = []): ?string
     return null;
 }
 
-$types = $sqlServerHelper->StoredProcedureHandler($mainConnection, Procedures::sqlTypeContent);
+$types = $sqlServerHelper->StoredProcedureHandler($connection->mainConnection, Procedures::sqlTypeContent);
 $form_type = getTypeFromRequest($_GET, $_POST);
 
 $content = include_template("add-forms/" . $form_type . "-form.php", [

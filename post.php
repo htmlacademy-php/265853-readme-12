@@ -10,16 +10,17 @@ $page_title = 'Readme: Публикация';
 
 $procedures = new Procedures();
 $sqlFunctions = new SqlFunctions();
+$connection = new Connection();
 
 $post_id = isset($_GET['post_id']) ? $_GET['post_id'] : null;
 
-$post = $sqlFunctions->GetPostById($mainConnection, $post_id)[0];
+$post = $sqlFunctions->GetPostById($connection->mainConnection, $post_id)[0];
 
 if (!$post) {
     $page_content = include_template('Error-404.php', []);
 } else {
     $post_content = include_template("post-types/post-{$post['icon_type']}.php", ['post' => $post]);
-    $posts_count = $sqlFunctions->GetUserPostsCount($mainConnection, $post['user_id']);
+    $posts_count = $sqlFunctions->GetUserPostsCount($connection->mainConnection, $post['user_id']);
     $page_content = include_template('post-show.php', [
         'post_content' => $post_content,
         'post' => $post,

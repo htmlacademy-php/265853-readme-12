@@ -7,18 +7,18 @@ define('USER', 'root');
 define('PASSWORD', 'root');
 /**Имя базы данных*/
 define('DATABASE', 'readme');
+/**Имя тестовой базы данных*/
+//Сделал для своего удобства
+//define('DATABASE', 'readmeTest');
 
 class Connection
 {
-    private $host, $user, $password, $database;
+    /**Главное подключение к БД*/
+    public $mainConnection;
 
-    function __construct($host, $user, $password, $database)
+    function __construct()
     {
-        $this->host = $host;
-        $this->user = $user;
-        $this->password = $password;
-        $this->database = $database;
-        $this->dbConnect();
+        $this->mainConnection = $this->dbConnect();
     }
 
     /**
@@ -27,7 +27,7 @@ class Connection
      */
     function dbConnect(): mysqli
     {
-        $connect = mysqli_connect($this->host, $this->user, $this->password, $this->database);
+        $connect = mysqli_connect(HOST, USER, PASSWORD, DATABASE);
 
         if (!$connect) {
             exit("Ошибка подключения: " . mysqli_connect_error());
@@ -41,7 +41,3 @@ class Connection
         mysqli_close($connection);
     }
 }
-
-$connection = new Connection(HOST, USER, PASSWORD, DATABASE);
-/**Главное подключение к БД*/
-$mainConnection = $connection->dbConnect();

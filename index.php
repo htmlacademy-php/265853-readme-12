@@ -15,6 +15,9 @@ date_default_timezone_set('Europe/Moscow');
 
 $sqlServerHelper = new SqlServerHelper();
 $sqlFunctions = new SqlFunctions();
+$connection = new Connection();
+
+
 
 /**
  * Получаем ссылку на посты/посты
@@ -45,15 +48,15 @@ $sorting_parameters['type'] = $_GET['type'] ?? 'all';
 $sort_value = $sorting_parameters['sort_value'];
 $sorting = $sorting_parameters['sorting'];
 
-$types = $sqlServerHelper->StoredProcedureHandler($mainConnection, Procedures::sqlTypeContent);
+$types = $sqlServerHelper->StoredProcedureHandler($connection->mainConnection, Procedures::sqlTypeContent);
 
-$posts = $sqlServerHelper->StoredProcedureHandler($mainConnection, Procedures::sqlPostUserType);
+$posts = $sqlServerHelper->StoredProcedureHandler($connection->mainConnection, Procedures::sqlPostUserType);
 
 if (isset($_GET['type'])) {
     if ($_GET['type'] === 'all') {
-        $posts = $sqlFunctions->popularPosts($mainConnection, $sort_value, $sorting);
+        $posts = $sqlFunctions->popularPosts($connection->mainConnection, $sort_value, $sorting);
     } else {
-        $posts = $sqlFunctions->popularPostsCategorySorting($mainConnection, $sorting_parameters['type'], $sort_value, $sorting);
+        $posts = $sqlFunctions->popularPostsCategorySorting($connection->mainConnection, $sorting_parameters['type'], $sort_value, $sorting);
     }
 }
 
