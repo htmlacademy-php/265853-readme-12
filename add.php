@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
             break;
         case 'photo':
-            if (empty($_FILES['userpic-file-photo']['name'])) {
+            if (empty($_FILES['user-file-photo']['name'])) {
                 $required_fields[] = 'photo-url';
                 $rules = array_merge(
                     $rules,
@@ -94,14 +94,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($posts['type'] === 'photo') {
-        if (!empty($_FILES['userpic-file-photo']['name'])) {
+        if (!empty($_FILES['user-file-photo']['name'])) {
             $upload = new Upload();
             //если он загружен без ошибок
-            if ($_FILES['userpic-file-photo']['error'] === UPLOAD_ERR_OK) {
+            if ($_FILES['user-file-photo']['error'] === UPLOAD_ERR_OK) {
                 $upload->uploadImgFile();
             } else {
                 //что бы знать по какой причине фаил не загружен
-                $error = new UploadException($_FILES['userpic-file-photo']['error']);
+                $error = new UploadException($_FILES['user-file-photo']['error']);
             }
         } else if (isset($posts['photo-url'])) {
             if (empty($errors['photo-url'])) {
@@ -130,7 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 break;
             case 'photo':
                 $column = 'img_url';
-                $db_post['img_url'] = (!empty(basename($_FILES['userpic-file-photo']['name']))) ? '../uploads/' . basename($_FILES['userpic-file-photo']['name']) : '../uploads/' . basename($posts['photo-url']);
+                $db_post['img_url'] = (!empty(basename($_FILES['user-file-photo']['name']))) ? '../uploads/' . basename($_FILES['user-file-photo']['name']) : '../uploads/' . basename($posts['photo-url']);
                 break;
             case 'video':
                 $column = 'video_url';

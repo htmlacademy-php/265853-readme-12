@@ -20,10 +20,10 @@ class Upload
 
     public function startUpload()
     {
-        $this->file_name = basename($_FILES['userpic-file-photo']['name']);
-        $this->file_size = $_FILES['userpic-file-photo']['size'];
-        $this->tmp_name = $_FILES['userpic-file-photo']['tmp_name'];
-        $this->file_type = $_FILES['userpic-file-photo']['type'];
+        $this->file_name = basename($_FILES['user-file-photo']['name']);
+        $this->file_size = $_FILES['user-file-photo']['size'];
+        $this->tmp_name = $_FILES['user-file-photo']['tmp_name'];
+        $this->file_type = $_FILES['user-file-photo']['type'];
 
         $this->file_url = $_POST['photo-url'];
 
