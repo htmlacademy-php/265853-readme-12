@@ -85,6 +85,7 @@ $usl_all = setUrl('all', $sorting_parameters['sort_value'], $sorting_parameters[
                 $user_avatar = htmlspecialchars($value['avatar']);
                 $user_name = htmlspecialchars($value['login']);
                 $video_url = htmlspecialchars($value['video_url']);
+                $quote_author = htmlspecialchars($value['quote_author']);
                 ?>
                 <article class="popular__post post post-<?= $post_type ?>">
                     <header class="post__header">
@@ -97,7 +98,7 @@ $usl_all = setUrl('all', $sorting_parameters['sort_value'], $sorting_parameters[
                                 <p>
                                     <?= $post_content ?>
                                 </p>
-                                <cite>Неизвестный Автор</cite>
+                                <cite><?= $quote_author ?></cite>
                             </blockquote>
 
                             <!--содержимое для поста-ссылки-->
