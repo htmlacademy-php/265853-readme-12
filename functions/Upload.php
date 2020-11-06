@@ -58,7 +58,7 @@ class Upload
             mkdir($this->file_path, 0777, true);
         }
         if (!file_put_contents(($this->file_path . basename($url)), $content)) {
-            return 'Файл небыл згружен';
+            return 'Файл не был загружен.';
         }
     }
 
@@ -81,7 +81,7 @@ class Upload
         }
         $upload_file = $this->file_path . $this->file_name;
         if (!move_uploaded_file($this->tmp_name, $upload_file)) {
-            return 'Файл небыл згружен.';
+            return 'Файл не был загружен.';
         }
     }
 }

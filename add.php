@@ -173,32 +173,16 @@ function getPostValue(string $name)
     return $_POST[$name] ?? "";
 }
 
-/**
- * Функция если тип формы из запроса
- * @param array $get GET запрос
- * @param array $post POST запрос
- *
- * @return string тип формы
- */
-function getTypeFromRequest(array $get, array $post = []): ?string
-{
-    if (isset($get['type'])) {
-        return (string)$get['type'];
-    } elseif (isset($post['type'])) {
-        return (string)$post['type'];
-    }
-    return null;
-}
-
 $types = $sqlServerHelper->StoredProcedureHandler($connection->mainConnection, Procedures::sqlTypeContent);
-$form_type = getTypeFromRequest($_GET, $_POST);
+
+$form_type = $_REQUEST['type'];
 
 $content = include_template("add-forms/" . $form_type . "-form.php", [
     'errors' => $errors
 ]);
 $page_content = include_template('adding-post.php', [
     'content_types' => $types,
-    'form_type' => $form_type,
+    'form_type' => '$form_type',
     'content' => $content,
     'errors' => $errors
 ]);
