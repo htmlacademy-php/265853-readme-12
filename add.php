@@ -182,7 +182,7 @@ $content = include_template("add-forms/" . $form_type . "-form.php", [
 ]);
 $page_content = include_template('adding-post.php', [
     'content_types' => $types,
-    'form_type' => '$form_type',
+    'form_type' => $form_type,
     'content' => $content,
     'errors' => $errors
 ]);

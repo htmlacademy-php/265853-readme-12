@@ -7,7 +7,8 @@ $error_tags = !empty($errors['tags']) ? $errors['tags'] : "";
 
 $validation_list_errors = (empty($errors)) ? 'visually-hidden' : "";
 
-$isPhoto = (isset($_GET['type']) and $_GET['type'] != 'photo') or (isset($_POST['type']) and $_POST['type'] != 'photo');
+$isPhotoGet = (isset($_GET['type']) and $_GET['type'] != 'photo');
+$isPhotoPost = (isset($_POST['type']) and $_POST['type'] != 'photo');
 ?>
 <main class="page__main page__main--adding-post">
     <div class="page__main-section">
@@ -58,7 +59,7 @@ $isPhoto = (isset($_GET['type']) and $_GET['type'] != 'photo') or (isset($_POST[
                                     </div>
                                     <?= $content ?>
                                     <?php
-                                    if ($isPhoto): ?>
+                                    if ($isPhotoGet or $isPhotoPost): ?>
                                         <div class="adding-post__input-wrapper form__input-wrapper">
                                             <label class="adding-post__label form__label" for="tags">Теги</label>
                                             <div
