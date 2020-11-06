@@ -3,7 +3,7 @@
 /**Набор функций для загрузки файло на сервер*/
 class Upload
 {
-    public $file_path = (__DIR__ . '/..') . "/uploads/";
+    public $file_path;
     public $file_size;
     public $tmp_name;
     public $file_name;
@@ -27,6 +27,7 @@ class Upload
 
         $this->file_url = $_POST['photo-url'];
 
+        $this->file_path = $_SERVER['DOCUMENT_ROOT'] . "/uploads/";
         $this->valid_file_types = ['image/png', 'image/jpeg', 'image/gif'];
         $this->maximum_file_size = 104857600;
     }
@@ -54,8 +55,10 @@ class Upload
             return "Не подходящий формат изображения. Используйте jpg, png или gif";
         }
 
-        if (!file_exists($this->file_path)) {
-            mkdir($this->file_path, 0777, true);
+        if (!is_dir($this->file_path)) {
+            if (!mkdir($this->file_path, 0777, true)) {
+                return 'Не удалось создать директорию...';
+            }
         }
         if (!file_put_contents(($this->file_path . basename($url)), $content)) {
             return 'Файл не был загружен.';
@@ -76,8 +79,10 @@ class Upload
             return 'Не подходящий формат прикрепленного изображения. Используйте jpg, png или gif.';
         }
 
-        if (!file_exists($this->file_path)) {
-            mkdir($this->file_path, 0777, true);
+        if (!is_dir($this->file_path)) {
+            if (!mkdir($this->file_path, 0777, true)) {
+                return 'Не удалось создать директорию...';
+            }
         }
         $upload_file = $this->file_path . $this->file_name;
         if (!move_uploaded_file($this->tmp_name, $upload_file)) {
