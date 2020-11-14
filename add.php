@@ -15,6 +15,13 @@ $page_title = 'Readme: Публикация';
 $sqlServerHelper = new SqlServerHelper();
 $connection = new Connection();
 //Решил что так будет меньше нагромождений и более читаемо
+/**
+ * Функция добавляет ошибки обязательных полей в массив
+ * @param  $array *массив в который добавить
+ * @param  $field *поле которое проверяем
+ * @param  $check *проверка
+ * @return array массив данных
+ */
 function RecordFaultyRules($array, $field, $check)
 {
     return array_merge($array,
@@ -66,7 +73,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($posts['type'] === 'video') {
-        $rules = RecordFaultyRules($rules, 'video-url', ($rules['video-url'] == null) ? $validation->my_check_youtube_url($posts['video-url']) : $rules['video-url']);
+        if ($rules['video-url'] == null and !check_youtube_url($posts['video-url'])) {
+            $rules = RecordFaultyRules($rules, 'video-url', 'Видео по такой ссылке не найдено. Проверьте ссылку на видео');
+        }
     }
 
     $errors = $validation->checkRequiredFields($required_fields);

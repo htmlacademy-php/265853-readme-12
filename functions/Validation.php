@@ -59,21 +59,6 @@ class Validation
         }
     }
 
-    //Хотел использовать check_youtube_url из helper.php но он всегда отдает false:(
-    /**
-     * Функция проверяет доступно ли видео по ссылке на youtube
-     * @param string $youtube_url Ссылка на youtube видео
-     *
-     * @return string Ошибку если валидация не прошла
-     */
-    function my_check_youtube_url($youtube_url)
-    {
-        $headers = get_headers('https://www.youtube.com/oembed?format=json&url=http://www.youtube.com/watch?v=' . extract_youtube_id($youtube_url));
-        if (!is_array($headers) or $headers[0] !== 'HTTP/1.0 200 OK') {
-            return "Видео по такой ссылке не найдено. Проверьте ссылку на видео";
-        }
-    }
-
     /**
      * Функция проверяет заполнены ли поля формы по указаным ключам
      * @param array $required_fields
