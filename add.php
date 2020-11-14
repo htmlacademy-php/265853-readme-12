@@ -14,6 +14,16 @@ $page_title = 'Readme: Публикация';
 
 $sqlServerHelper = new SqlServerHelper();
 $connection = new Connection();
+//Решил что так будет меньше нагромождений и более читаемо
+function RecordFaultyRules($array, $field, $check)
+{
+    return array_merge($array,
+        [
+            $field => $check
+
+        ]
+    );
+}
 
 $errors = [];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -33,64 +43,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     switch ($posts['type']) {
         case 'text':
             $required_fields[] = 'post-text';
-            $rules = array_merge(
-                $rules,
-                [
-                    'post-text' => $validation->validateLength($posts['post-text'], 10, 600)
-                ]
-            );
+            $rules = RecordFaultyRules($rules, 'post-text', $validation->validateLength($posts['post-text'], 10, 600));
             break;
         case 'quote':
             $required_fields = array_merge($required_fields, ['quote-text', 'quote-author']);
-            $rules = array_merge(
-                $rules,
-                [
-                    'quote-text' => $validation->validateLength($posts['quote-text'], 10, 60)
-                ]
-            );
+            $rules = RecordFaultyRules($rules, 'quote-text', $validation->validateLength($posts['quote-text'], 10, 60));
             break;
         case 'video':
             $required_fields[] = 'video-url';
-            $rules = array_merge(
-                $rules,
-                [
-                    'video-url' => $validation->checkUrl($posts['video-url'])
-
-                ]
-            );
+            $rules = RecordFaultyRules($rules, 'video-url', $validation->checkUrl($posts['video-url']));
             break;
         case 'link':
             $required_fields[] = 'post-link';
-            $rules = array_merge(
-                $rules,
-                [
-                    'post-link' => $validation->checkUrl($posts['post-link'])
-
-                ]
-            );
+            $rules = RecordFaultyRules($rules, 'post-link', $validation->checkUrl($posts['post-link']));
             break;
         case 'photo':
             if (empty($_FILES['user-file-photo']['name'])) {
                 $required_fields[] = 'photo-url';
-                $rules = array_merge(
-                    $rules,
-                    [
-                        'photo-url' => $validation->checkUrl($posts['photo-url'])
-
-                    ]
-                );
+                $rules = RecordFaultyRules($rules, 'photo-url', $validation->checkUrl($posts['photo-url']));
             }
             break;
     }
 
     if ($posts['type'] === 'video') {
-        $rules = array_merge(
-            $rules,
-            [
-                'video-url' => (/*isset($posts['video-url']) and $posts['video-url'] !== "" and*/ $rules['video-url'] == null) ? $validation->my_check_youtube_url($posts['video-url']) : $rules['video-url']
-
-            ]
-        );
+        $rules = RecordFaultyRules($rules, 'video-url', ($rules['video-url'] == null) ? $validation->my_check_youtube_url($posts['video-url']) : $rules['video-url']);
     }
 
     $errors = $validation->checkRequiredFields($required_fields);
@@ -103,32 +79,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             //если он загружен без ошибок
             if ($_FILES['user-file-photo']['error'] === UPLOAD_ERR_OK) {
                 $upload = new Upload();
-                $rules = array_merge(
-                    $rules,
-                    [
-                        'user-file-photo' => $upload->uploadImgFile()
-
-                    ]
-                );
+                $rules = RecordFaultyRules($rules, 'user-file-photo', $upload->uploadImgFile());
             } else {
                 //что бы знать по какой причине фаил не загружен
-                $rules = array_merge(
-                    $rules,
-                    [
-                        'user-file-photo' => new UploadException($_FILES['user-file-photo']['error'])
-
-                    ]
-                );
+                $rules = RecordFaultyRules($rules, 'user-file-photo', new UploadException($_FILES['user-file-photo']['error']));
             }
         } else if (filter_input(INPUT_POST, 'photo-url')) {
             $upload = new Upload();
-            $rules = array_merge(
-                $rules,
-                [
-                    'photo-url' => $upload->getImgByLink()
-
-                ]
-            );
+            $rules = RecordFaultyRules($rules, 'photo-url', $upload->getImgByLink());
         }
     }
     //После загрузки файлов еще раз проверяем на ошибки

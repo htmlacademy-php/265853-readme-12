@@ -6,10 +6,10 @@ define('USER', 'root');
 /**Пароль*/
 define('PASSWORD', 'root');
 /**Имя базы данных*/
-//define('DATABASE', 'readme');
+define('DATABASE', 'readme');
 /**Имя тестовой базы данных*/
 //Сделал для своего удобства
-define('DATABASE', 'readmeTest');
+//define('DATABASE', 'readmeTest');
 
 class Connection
 {
