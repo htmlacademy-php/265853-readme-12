@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $rules = [
         'heading' => $validation->validateLength($posts['heading']),
-        'tags' => $validation->checkTags($posts['tags'])
+        'tags' => ($posts['tags']) ? $validation->checkTags($posts['tags']) : null
     ];
 
     switch ($posts['type']) {
@@ -137,13 +137,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $sql = "INSERT INTO posts (title, $column, user_id, type_id) VALUES (?, ?, ?, $user_id, $type_id)";
         }
 
-        $tags = $validation->checkTags($posts['tags'], true);
+        //Пустая строка это не тег, поэтому если пришла пустая строка считаем что тегов нет
+        $tags = ($posts['tags']) ? $validation->checkTags($posts['tags'], true) : null;
 
         $stmt = db_get_prepare_stmt($connection->mainConnection, $sql, $db_post);
 
         $post_id = $sqlServerHelper->addPostToDB($connection->mainConnection, $stmt);
-
-        $result = $sqlServerHelper->addTagsToPosts($connection->mainConnection, $tags, $post_id);
+        //Тег не обязательный, поэтому если его нет то и грузить не нужно
+        $result = ($tags != null ) ? $sqlServerHelper->addTagsToPosts($connection->mainConnection, $tags, $post_id) : true;
         if ($result) {
             header("Location: post.php?post_id=" . $post_id);
         }

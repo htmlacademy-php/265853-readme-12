@@ -25,8 +25,8 @@ class Validation
      */
     function checkTags(string $tags, bool $response = false)
     {
-        $pattern = '/^[\s*а-яА-ЯёЁa-zA-Z0-9+\s]*$/';
-        if (!preg_match($pattern, $tags)) {
+        $pattern = '^[\s\wа-яА-ЯёЁ]+$';
+        if (!mb_ereg($pattern, $tags)) {
             return 'Теги должны состоять только из букв и цифр.';
         }
 

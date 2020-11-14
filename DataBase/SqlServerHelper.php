@@ -69,25 +69,27 @@ class SqlServerHelper
     {
         $tag_sql = 'INSERT INTO hashtags (title) VALUES (?)';
         foreach ($tags as $tag) {
-            $search_sql = "SELECT h.id FROM hashtags h WHERE h.title = '$tag'";
+            if($tag) {
+                $search_sql = "SELECT h.id FROM hashtags h WHERE h.title = '$tag'";
 
-            $result = mysqli_query($connect, $search_sql);
-            if (!$result) {
-                $error = mysqli_error($connect);
-                die("Ошибка MySQL: " . $error);
-            }
-            $search_result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+                $result = mysqli_query($connect, $search_sql);
+                if (!$result) {
+                    $error = mysqli_error($connect);
+                    die("Ошибка MySQL: " . $error);
+                }
+                $search_result = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-            if (!empty($search_result)) {
-                $tags_id[] = reset($search_result[0]);
-            } else {
-                $values['title'] = $tag;
-                $tag_stmt = db_get_prepare_stmt($connect, $tag_sql, $values);
-                $result = mysqli_stmt_execute($tag_stmt);
-                if ($result) {
-                    $tags_id[] = mysqli_insert_id($connect);
+                if (!empty($search_result)) {
+                    $tags_id[] = reset($search_result[0]);
                 } else {
-                    return 'Не удалось добавить теги' . mysqli_error($connect);
+                    $values['title'] = $tag;
+                    $tag_stmt = db_get_prepare_stmt($connect, $tag_sql, $values);
+                    $result = mysqli_stmt_execute($tag_stmt);
+                    if ($result) {
+                        $tags_id[] = mysqli_insert_id($connect);
+                    } else {
+                        return 'Не удалось добавить теги' . mysqli_error($connect);
+                    }
                 }
             }
         }
