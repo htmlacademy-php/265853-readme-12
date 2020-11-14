@@ -6,7 +6,7 @@ $validation_tags = (!empty($errors['tags'])) ? "form__input-section--error" : ""
 $error_tags = !empty($errors['tags']) ? $errors['tags'] : "";
 ?>
 <h2 class="visually-hidden">Форма добавления фото</h2>
-<form class="adding-post__form form" action="../../add.php" method="post" enctype="multipart/form-data">
+<form class="adding-post__form form" action="/add.php" method="post" enctype="multipart/form-data">
     <input type="hidden" id="type" name="type" value="photo">
     <div class="form__text-inputs-wrapper">
         <div class="form__text-inputs">

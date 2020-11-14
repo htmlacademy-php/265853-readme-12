@@ -24,7 +24,7 @@ $isPhotoPost = (isset($_POST['type']) and $_POST['type'] != 'photo');
                         as $post_type => $content_type): ?>
                         <li class="adding-post__tabs-item filters__item">
                             <a class="adding-post__tabs-link filters__button filters__button--<?= $content_type['icon_type']; ?> <?php if ($form_type == $content_type['icon_type']): ?> filters__button--active  tabs__item--active filters__button--active<?php endif; ?>"
-                               href="../add.php?type=<?= $content_type['icon_type']; ?>">
+                               href="/add.php?type=<?= $content_type['icon_type']; ?>">
                                 <svg class="filters__icon" width="22" height="18">
                                     <use xlink:href="#icon-filter-<?= $content_type['icon_type']; ?>"></use>
                                 </svg>
@@ -37,7 +37,7 @@ $isPhotoPost = (isset($_POST['type']) and $_POST['type'] != 'photo');
                 <div class="adding-post__tab-content">
                     <section class="adding-post__<?= $content_type['icon_type'] ?>">
                         <h2 class="visually-hidden">Форма добавления <?= $content_type['icon_type'] ?></h2>
-                        <form class="adding-post__form form" action="../add.php" method="post"
+                        <form class="adding-post__form form" action="/add.php" method="post"
                               enctype="multipart/form-data">
                             <div class="form__text-inputs-wrapper">
                                 <div class="form__text-inputs">

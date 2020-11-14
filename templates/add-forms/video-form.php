@@ -3,7 +3,7 @@ $validation_video_url = (!empty($errors['video-url'])) ? "form__input-section--e
 $error_video_url = !empty($errors['video-url']) ? $errors['video-url'] : "";
 ?>
 <h2 class="visually-hidden">Форма добавления видео</h2>
-<form class="adding-post__form form" action="../../add.php" method="post" enctype="multipart/form-data">
+<form class="adding-post__form form" action="/add.php" method="post" enctype="multipart/form-data">
     <input type="hidden" id="type" name="type" value="video">
     <div class="form__text-inputs-wrapper">
         <div class="form__text-inputs">

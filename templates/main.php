@@ -89,7 +89,7 @@ $usl_all = setUrl('all', $sorting_parameters['sort_value'], $sorting_parameters[
                 ?>
                 <article class="popular__post post post-<?= $post_type ?>">
                     <header class="post__header">
-                        <h2><a href="../post.php?post_id=<?= $post_id ?>"><?= $post_title ?></a></h2>
+                        <h2><a href="/post.php?post_id=<?= $post_id ?>"><?= $post_title ?></a></h2>
                     </header>
                     <div class="post__main">
                         <!--содержимое для поста-цитаты-->

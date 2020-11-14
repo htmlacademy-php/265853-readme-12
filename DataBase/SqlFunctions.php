@@ -27,7 +27,7 @@ class SqlFunctions
                     P.`user_id`,
 	                P.`type_id`,
 		            CT.`icon_type`, U.`avatar`, U.`login`, IFNULL(L.`likes`, 0) AS likes, IFNULL(COM.`comments`, 0) AS comments_value,
-		            P.`video_url`
+		            P.`video_url`,P.`quote_author`
         FROM `posts` P
         INNER JOIN `users` U ON P.`user_id` = U.`id`
         INNER JOIN `content_type` CT ON P.`type_id` = CT.`id`

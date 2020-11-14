@@ -189,7 +189,7 @@
                             </div>
                         </li>
                         <li>
-                            <a class="header__post-button button button--transparent" href="../add.php?type=text">Пост</a>
+                            <a class="header__post-button button button--transparent" href="/add.php?type=text">Пост</a>
                         </li>
                     </ul>
                 </nav>

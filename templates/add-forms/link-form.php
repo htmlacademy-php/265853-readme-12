@@ -3,7 +3,7 @@ $validation_post_link = (!empty($errors['post-link'])) ? "form__input-section--e
 $error_post_link = !empty($errors['post-link']) ? $errors['post-link'] : "";
 ?>
 <h2 class="visually-hidden">Форма добавления ссылки</h2>
-<form class="adding-post__form form" action="../../add.php" method="post">
+<form class="adding-post__form form" action="/add.php" method="post">
     <input type="hidden" id="type" name="type" value="link">
     <div class="form__text-inputs-wrapper">
         <div class="form__text-inputs">

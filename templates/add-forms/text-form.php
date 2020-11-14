@@ -3,7 +3,7 @@ $validation_post_text = (!empty($errors['post-text'])) ? "form__input-section--e
 $error_post_text = !empty($errors['post-text']) ? $errors['post-text'] : "";
 ?>
 <h2 class="visually-hidden">Форма добавления текста</h2>
-<form class="adding-post__form form" action="../../add.php" method="post">
+<form class="adding-post__form form" action="/add.php" method="post">
     <input type="hidden" id="type" name="type" value="text">
     <div class="form__text-inputs-wrapper">
         <div class="form__text-inputs">

@@ -6,7 +6,7 @@ $validation_quote_author = (!empty($errors['quote-author'])) ? "form__input-sect
 $error_quote_author = !empty($errors['quote-author']) ? $errors['quote-author'] : "";
 ?>
 <h2 class="visually-hidden">Форма добавления цитаты</h2>
-<form class="adding-post__form form" action="../../add.php" method="post">
+<form class="adding-post__form form" action="/add.php" method="post">
     <input type="hidden" id="type" name="type" value="quote">
     <div class="form__text-inputs-wrapper">
         <div class="form__text-inputs">
