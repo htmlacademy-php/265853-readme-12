@@ -93,25 +93,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
     }
 
-    if ($posts['type'] === 'photo') {
+    $errors = $validation->checkRequiredFields($required_fields);
+    //Определили ошибки
+    $errors = $validation->checkRules($rules, $errors, $posts);
+
+    if (empty($errors['photo-url']) and $posts['type'] === 'photo') {
         if (!empty($_FILES['user-file-photo']['name'])) {
-            $upload = new Upload();
+            $posts = array_merge($posts, ['user-file-photo' => '']);
             //если он загружен без ошибок
             if ($_FILES['user-file-photo']['error'] === UPLOAD_ERR_OK) {
-                $upload->uploadImgFile();
+                $upload = new Upload();
+                $rules = array_merge(
+                    $rules,
+                    [
+                        'user-file-photo' => $upload->uploadImgFile()
+
+                    ]
+                );
             } else {
                 //что бы знать по какой причине фаил не загружен
-                $error = new UploadException($_FILES['user-file-photo']['error']);
+                $rules = array_merge(
+                    $rules,
+                    [
+                        'user-file-photo' => new UploadException($_FILES['user-file-photo']['error'])
+
+                    ]
+                );
             }
-        } else if (isset($posts['photo-url'])) {
-            if (empty($errors['photo-url'])) {
-                $upload = new Upload();
-                $upload->getImgByLink();
-            }
+        } else if (filter_input(INPUT_POST, 'photo-url')) {
+            $upload = new Upload();
+            $rules = array_merge(
+                $rules,
+                [
+                    'photo-url' => $upload->getImgByLink()
+
+                ]
+            );
         }
     }
-
-    $errors = $validation->checkRequiredFields($required_fields);
+    //После загрузки файлов еще раз проверяем на ошибки
     $errors = $validation->checkRules($rules, $errors, $posts);
 
     if (empty($errors)) {
