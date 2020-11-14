@@ -25,9 +25,9 @@ class Validation
      */
     function checkTags(string $tags, bool $response = false)
     {
-        //Сделал такую валидацию, что бы можно было вводить буквы и цифры и знак хештега("#")
-        if (preg_match('/[^a-zа-я-Z0-9-# ]+/msiu', $tags)) {
-            return 'Теги должны состоять только из букв и цифр, допустим знак решётка(#).';
+        $pattern = '/^[\s*а-яА-ЯёЁa-zA-Z0-9+\s]*$/';
+        if (!preg_match($pattern, $tags)) {
+            return 'Теги должны состоять только из букв и цифр.';
         }
 
         $tags_line = trim(htmlspecialchars($tags));
