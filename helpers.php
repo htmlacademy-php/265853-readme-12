@@ -159,7 +159,7 @@ function check_youtube_url($youtube_url)
     $id = extract_youtube_id($youtube_url);
 
     if ($id) {
-        $api_data = ['id' => $id, 'part' => 'id,status', 'key' => 'AIzaSyBN-AXBnCPxO3HJfZZdZEHMybVfIgt16PQ'];
+        $api_data = ['id' => $id, 'part' => 'id,status', 'key' => 'AIzaSyCk5oCDqAGeAoA4uJUCQikPNOf41fVn8oA'];
         $url = "https://www.googleapis.com/youtube/v3/videos?" . http_build_query($api_data);
 
         $resp = file_get_contents($url);

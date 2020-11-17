@@ -75,6 +75,9 @@ $usl_all = setUrl('all', $sorting_parameters['sort_value'], $sorting_parameters[
 
         <div class="popular__posts">
             <?php foreach ($posts as $key => $value):
+                $timeHelper = new TimeHelper();
+                $stringHelper = new StringHelper();
+
                 $post_id = htmlspecialchars($value['id']);
                 $post_content = htmlspecialchars($value['content_text']);
                 $post_type = htmlspecialchars($value['icon_type']);
@@ -82,10 +85,11 @@ $usl_all = setUrl('all', $sorting_parameters['sort_value'], $sorting_parameters[
                 $user_avatar = htmlspecialchars($value['avatar']);
                 $user_name = htmlspecialchars($value['login']);
                 $video_url = htmlspecialchars($value['video_url']);
+                $quote_author = htmlspecialchars($value['quote_author']);
                 ?>
                 <article class="popular__post post post-<?= $post_type ?>">
                     <header class="post__header">
-                        <h2><a href="../post.php?post_id=<?= $post_id ?>"><?= $post_title ?></a></h2>
+                        <h2><a href="/post.php?post_id=<?= $post_id ?>"><?= $post_title ?></a></h2>
                     </header>
                     <div class="post__main">
                         <!--содержимое для поста-цитаты-->
@@ -94,7 +98,7 @@ $usl_all = setUrl('all', $sorting_parameters['sort_value'], $sorting_parameters[
                                 <p>
                                     <?= $post_content ?>
                                 </p>
-                                <cite>Неизвестный Автор</cite>
+                                <cite><?= $quote_author ?></cite>
                             </blockquote>
 
                             <!--содержимое для поста-ссылки-->
@@ -135,7 +139,7 @@ $usl_all = setUrl('all', $sorting_parameters['sort_value'], $sorting_parameters[
                             </div>
                         <?php else: ?>
                             <!--здесь содержимое карточки-->
-                            <p><?= cropText($post_content) ?></p>
+                            <p><?= $stringHelper->cropText($post_content) ?></p>
                         <?php endif; ?>
                     </div>
                     <footer class="post__footer">
@@ -149,10 +153,10 @@ $usl_all = setUrl('all', $sorting_parameters['sort_value'], $sorting_parameters[
                                 <div class="post__info">
                                     <b class="post__author-name"><?= $user_name ?></b>
                                     <?php
-                                    $post_date = GetPostTime($key);
+                                    $post_date = $timeHelper->GetPostTime($key);
                                     ?>
                                     <time class="post__time" title="<?= $post_date->format('d.m.Y H:i') ?>"
-                                          datetime="<?= $post_date->format('Y-m-d H:i:s') ?>"><?= GetDateRelativeFormat($post_date); ?></time>
+                                          datetime="<?= $post_date->format('Y-m-d H:i:s') ?>"><?= $timeHelper->GetDateRelativeFormat($post_date); ?></time>
                                 </div>
                             </a>
                         </div>
