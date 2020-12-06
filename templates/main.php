@@ -147,7 +147,7 @@ $usl_all = setUrl('all', $sorting_parameters['sort_value'], $sorting_parameters[
                             <a class="post__author-link" href="#" title="Автор">
                                 <div class="post__avatar-wrapper">
                                     <!--укажите путь к файлу аватара-->
-                                    <img class="post__author-avatar" src="../img/<?= $user_avatar ?>"
+                                    <img class="post__author-avatar" src="../userAvatar/<?= $user_avatar ?>"
                                          alt="Аватар пользователя">
                                 </div>
                                 <div class="post__info">

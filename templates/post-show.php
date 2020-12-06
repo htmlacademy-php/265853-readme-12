@@ -111,7 +111,7 @@
                     <div class="post-details__user-info user__info">
                         <div class="post-details__avatar user__avatar">
                             <a class="post-details__avatar-link user__avatar-link" href="#">
-                                <img class="post-details__picture user__picture" src="img/<?= $post['avatar'] ?>"
+                                <img class="post-details__picture user__picture" src="userAvatar/<?= $post['avatar'] ?>"
                                      alt="Аватар пользователя">
                             </a>
                         </div>

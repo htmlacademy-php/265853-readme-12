@@ -1,8 +1,31 @@
 <?php
+require_once('DataBase\SqlServerHelper.php');
 
 /**Набор функций для валидации*/
 class Validation
 {
+
+    public function __construct()
+    {
+        $this->sqlServerHelper = new SqlServerHelper();
+    }
+
+    /**
+     * Функция добавляет ошибки обязательных полей в массив
+     * @param  $array *массив в который добавить
+     * @param  $field *поле которое проверяем
+     * @param  $check *проверка
+     * @return array массив данных
+     */
+    function RecordFaultyRules($array, $field, $check)
+    {
+        return array_merge($array,
+            [
+                $field => $check
+
+            ]
+        );
+    }
 
     /**
      * Функция проверяет ссылку на корректность
@@ -93,5 +116,97 @@ class Validation
             }
         }
         return $errors;
+    }
+
+    /**
+     * Проверка email
+     *
+     * @param mysqli $connect Строка соединения
+     * @param string $email email который нужно проверить
+     *
+     * @return string|null Ошибки если валидация не прошла, null в случаи успеха
+     */
+    function checkEmail(mysqli $connect, string $email)
+    {
+        $email = trim($email);
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return 'Введите корректный адрсе электронной почты.';
+        }
+
+        $sql = "SELECT `email` FROM `users` WHERE `email` LIKE '$email'";
+        $a = $this->sqlServerHelper->requestHandler($connect, $sql);
+        if (!empty($a)) {
+            return 'Пользователь с таким адрессом электронной почты уже зарагестрирован.';
+        }
+        return null;
+    }
+
+    /**
+     * Проверка login
+     *
+     * @param mysqli $connect Строка соединения
+     * @param string $login login который нужно проверить
+     *
+     * @return string|null Ошибки если валидация не прошла, null в случаи успеха
+     */
+    function checkLogin(mysqli $connect, string $login)
+    {
+        $check_length = $this->validateLength($login, 3, 50);
+        if ($check_length !== NULL) {
+            return $check_length;
+        }
+        $pattern = '^[\s\wа-яА-ЯёЁ]+$';
+        if (!mb_ereg($pattern, $login)) {
+            return 'Логин должен состоять только из букв английского или русского алфавита и цифр';
+        }
+
+        $search_sql = "SELECT `login` FROM `users` WHERE `login` = '$login'";
+        $found_user = $this->sqlServerHelper->requestHandler($connect, $search_sql);
+        if (!empty($found_user)) {
+            return "Логин: $login уже занят";
+        }
+        return null;
+    }
+
+    /**
+     * Проверка пороля
+     *
+     * @param mysqli $connect Строка соединения
+     * @param string $password пароль который нужно проверить
+     *
+     * @return string|null Ошибки если валидация не прошла, null в случаи успеха
+     */
+    function checkPassword(mysqli $connect, string $password)
+    {
+        $check_length = $this->validateLength($password, 6, 50);
+        if ($check_length !== NULL) {
+            return $check_length;
+        }
+        $pattern = '^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\X])(?=.*[!$#%]).*$';
+        if (!mb_ereg($pattern, $password)) {
+            return 'Пароль должен содержитать символы по меньшей мере из трех следующих категорий:' . "<br/>" .
+                '1) Английские буквы верхнего регистра (A – Z)' . "<br/>" .
+                '2) Английские символы нижнего регистра (a – z)' . "<br/>" .
+                '3) Базовые 10 цифр (0 – 9)' . "<br/>" .
+                '4) Non-alphanumeric (Например:!, $, # Или%)' . "<br/>" .
+                '5) Юникодные символы';
+        }
+        return null;
+    }
+
+    /**
+     * Проверка на совпадения значений
+     *
+     * @param string|int $value_one Первое значение
+     * @param string|int $value_two Второе значение
+     *
+     * @return string|null Ошибки если валидация не прошла, null в случаи успеха
+     */
+    function compareValues($value_one, $value_two)
+    {
+        if ($value_one !== $value_two) {
+            return 'Пароли не совпадают';
+        }
+        return null;
     }
 }

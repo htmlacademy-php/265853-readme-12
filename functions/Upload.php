@@ -25,9 +25,9 @@ class Upload
         $this->tmp_name = $_FILES['user-file-photo']['tmp_name'];
         $this->file_type = $_FILES['user-file-photo']['type'];
 
-        $this->file_url = $_POST['photo-url'];
-
-        $this->file_path = $_SERVER['DOCUMENT_ROOT'] . "/uploads/";
+        $this->file_url = (!empty($_POST['photo-url'])) ? $_POST['photo-url'] : "";
+        //TODO: пока что не придумал другого решения, решил проверять если есть тип то это фото из добавления поста иначе аватарка
+        $this->file_path = $_SERVER['DOCUMENT_ROOT'] . ((!empty($_POST['type'])) ? "/uploads/" : "/userAvatar/");
         $this->valid_file_types = ['image/png', 'image/jpeg', 'image/gif'];
         $this->maximum_file_size = 104857600;
     }
