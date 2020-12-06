@@ -9,7 +9,7 @@ CREATE TABLE `users` (
     `date_add` TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     `email`    VARCHAR(50) NOT NULL UNIQUE,
     `login`    VARCHAR(50) NOT NULL UNIQUE,
-    `password` VARCHAR(50) NOT NULL,
+    `password` VARCHAR(70) NOT NULL,
     `avatar`   VARCHAR(128)
 );
 
